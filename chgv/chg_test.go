@@ -15,14 +15,16 @@ func ExampleChg() {
 		NameChg
 	)
 	u := user{id: 4711, name: "John Doe"}
+	fmt.Println("_", u)
 	chg := u.id.Set(4712, IDChg)
 	chg |= u.name.Set("John Doe", NameChg)
-	fmt.Println(chg)
-	chg |= u.name.Set("Jack Doe", NameChg)
-	fmt.Println(chg)
+	fmt.Println(chg, u)
+	chg = u.name.Set("Jack Doe", NameChg)
+	fmt.Println(chg, u)
 	// Output:
-	// 1
-	// 3
+	// _ {4711 John Doe}
+	// 1 {4712 John Doe}
+	// 2 {4712 Jack Doe}
 }
 
 func ExampleChg_Map() {
