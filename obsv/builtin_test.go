@@ -1,9 +1,14 @@
-package onchg
+package obsv
 
 import (
 	"fmt"
 
 	"git.fractalqb.de/fractalqb/change"
+)
+
+var (
+	_ Observable = (*String)(nil)
+	_ Event      = (*StringChg)(nil)
 )
 
 var (
@@ -29,20 +34,18 @@ var (
 )
 
 func ExampleString() {
-	s := NewString("", func(_ *String, ov, nv string, pre bool) change.Flags {
-		if pre {
-			if nv == "" {
-				return 0
-			}
-		} else {
-			fmt.Printf("Changed from '%s' to '%s'\n", ov, nv)
-		}
-		return 1
-	})
-	fmt.Println("Chg:", s.Set("Embrace change", 0))
-	fmt.Println("Chg:", s.Set("", 0))
+	str := *NewString("", "example string", 4711)
+	str.ObsRegister(0, nil, UpdateFunc(func(tag interface{}, e Event) {
+		chg := e.(StringChg)
+		fmt.Printf("Tage: %+v\n", tag)
+		fmt.Printf("Event: '%s'→'%s': %d\n",
+			chg.OldValue(),
+			chg.NewValue(),
+			e.Chg())
+	}))
+	fmt.Println(str.Set("Observe this change!", 0), str.ObsLastVeto())
 	// Output:
-	// Changed from '' to 'Embrace change'
-	// Chg: 1
-	// Chg: 0
+	// Tage: example string
+	// Event: ''→'Observe this change!': 4711
+	// 4711 <nil>
 }

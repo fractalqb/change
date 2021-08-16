@@ -1,0 +1,34 @@
+package obsv
+
+import (
+	"fmt"
+
+	"git.fractalqb.de/fractalqb/change"
+)
+
+func Example() {
+	user := struct {
+		ObservableBase
+		Name   String `obsv:"called,flag=0b100"`
+		Logins Int    `obsv:",tag=given-tag,flag=1"`
+	}{
+		Name:   *NewString("John Doe", nil, 0),
+		Logins: *NewInt(0, nil, 0),
+	}
+	ObserveFields(&user, 0, false, change.AllFlags)
+	user.ObsRegister(0, nil, UpdateFunc(func(tag interface{}, e Event) {
+		fmt.Println("Tag:", tag, "Event:", e)
+	}))
+	chg := user.Name.Set("John Doe", 0)
+	chg |= user.Logins.Set(1, 2)
+	fmt.Printf("Changes: 0b%b\n", chg)
+	if chg&1 == 0 {
+		fmt.Println("Name did not change")
+	} else {
+		fmt.Println("Name changed")
+	}
+	// Output:
+	// Tag: <nil> Event: Field 'Logins': tag=given-tag event=Chg int 0 -> 1 flags=2
+	// Changes: 0b10
+	// Name did not change
+}

@@ -2,13 +2,15 @@ package chgv
 
 import (
 	"time"
+
+	"git.fractalqb.de/fractalqb/change"
 )
 
 type Time time.Time
 
 func (t Time) Get() time.Time { return time.Time(t) }
 
-func (t *Time) Set(v time.Time, chg Chg) Chg {
+func (t *Time) Set(v time.Time, chg change.Flags) change.Flags {
 	if time.Time(*t).Equal(v) {
 		return 0
 	}
@@ -22,7 +24,7 @@ type Duration time.Duration
 
 func (d Duration) Get() time.Duration { return time.Duration(d) }
 
-func (d *Duration) Set(v time.Duration, chg Chg) Chg {
+func (d *Duration) Set(v time.Duration, chg change.Flags) change.Flags {
 	if time.Duration(*d) == v {
 		return 0
 	}
