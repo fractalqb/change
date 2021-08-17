@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+
 package change
 
 // Flags is used by all Set methods to return to the caller if a Set
