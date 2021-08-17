@@ -1,3 +1,18 @@
+// Copyright 2021 Marcus Perlick
+// This file is part of Go module github.com/fractalqb/change
+//
+// Foobar is free software: you can redistribute it and/or modify it
+// under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// Foobar is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 package change
 
 // Flags is used by all Set methods to return to the caller if a Set
@@ -12,7 +27,8 @@ package change
 // passes 0 flags to the actual call.
 type Flags uint64
 
-// AllFlags is a Flags set with all flags set.
+// AllFlags is a Flags set with all flags set – just to have said
+// that.
 const AllFlags = ^Flags(0)
 
 // Any tests if any of bits is set in c.

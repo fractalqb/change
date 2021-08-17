@@ -1,23 +1,8 @@
-// Copyright 2021 Marcus Perlick
-// This file is part of Go module github.com/fractalqb/change
-//
-// Foobar is free software: you can redistribute it and/or modify it
-// under the terms of the GNU Affero General Public License as
-// published by the Free Software Foundation, either version 3 of the
-// License, or (at your option) any later version.
-//
-// Foobar is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 package onchg
 
 import (
-	"github.com/fractalqb/change"
-	"github.com/fractalqb/change/chgv"
+	"git.fractalqb.de/fractalqb/change"
+	"git.fractalqb.de/fractalqb/change/chgv"
 )
 
 // ChgFlags is used to provide hooks that always return a Flags value. It is
@@ -122,7 +107,7 @@ func (chg ChgFlag) String(src *String, _, _ string, _ bool) change.Flags {
 }
 
 // Bool tracks changes of bool values with a hook and Flags.
-// See also onchg package documentation.
+// See also onchg package documentation. 
 type Bool struct {
 	v chgv.Bool
 	h BoolHook
@@ -159,7 +144,7 @@ func (cv *Bool) Set(v bool, chg change.Flags) change.Flags {
 }
 
 // Uint8 tracks changes of bool values with a hook and Flags.
-// See also onchg package documentation.
+// See also onchg package documentation. 
 type Uint8 struct {
 	v chgv.Uint8
 	h Uint8Hook
@@ -196,7 +181,7 @@ func (cv *Uint8) Set(v uint8, chg change.Flags) change.Flags {
 }
 
 // Uint16 tracks changes of bool values with a hook and Flags.
-// See also onchg package documentation.
+// See also onchg package documentation. 
 type Uint16 struct {
 	v chgv.Uint16
 	h Uint16Hook
@@ -233,7 +218,7 @@ func (cv *Uint16) Set(v uint16, chg change.Flags) change.Flags {
 }
 
 // Uint32 tracks changes of bool values with a hook and Flags.
-// See also onchg package documentation.
+// See also onchg package documentation. 
 type Uint32 struct {
 	v chgv.Uint32
 	h Uint32Hook
@@ -270,7 +255,7 @@ func (cv *Uint32) Set(v uint32, chg change.Flags) change.Flags {
 }
 
 // Uint64 tracks changes of bool values with a hook and Flags.
-// See also onchg package documentation.
+// See also onchg package documentation. 
 type Uint64 struct {
 	v chgv.Uint64
 	h Uint64Hook
@@ -307,7 +292,7 @@ func (cv *Uint64) Set(v uint64, chg change.Flags) change.Flags {
 }
 
 // Int8 tracks changes of bool values with a hook and Flags.
-// See also onchg package documentation.
+// See also onchg package documentation. 
 type Int8 struct {
 	v chgv.Int8
 	h Int8Hook
@@ -344,7 +329,7 @@ func (cv *Int8) Set(v int8, chg change.Flags) change.Flags {
 }
 
 // Int16 tracks changes of bool values with a hook and Flags.
-// See also onchg package documentation.
+// See also onchg package documentation. 
 type Int16 struct {
 	v chgv.Int16
 	h Int16Hook
@@ -381,7 +366,7 @@ func (cv *Int16) Set(v int16, chg change.Flags) change.Flags {
 }
 
 // Int32 tracks changes of bool values with a hook and Flags.
-// See also onchg package documentation.
+// See also onchg package documentation. 
 type Int32 struct {
 	v chgv.Int32
 	h Int32Hook
@@ -418,7 +403,7 @@ func (cv *Int32) Set(v int32, chg change.Flags) change.Flags {
 }
 
 // Int64 tracks changes of bool values with a hook and Flags.
-// See also onchg package documentation.
+// See also onchg package documentation. 
 type Int64 struct {
 	v chgv.Int64
 	h Int64Hook
@@ -455,7 +440,7 @@ func (cv *Int64) Set(v int64, chg change.Flags) change.Flags {
 }
 
 // Float32 tracks changes of bool values with a hook and Flags.
-// See also onchg package documentation.
+// See also onchg package documentation. 
 type Float32 struct {
 	v chgv.Float32
 	h Float32Hook
@@ -492,7 +477,7 @@ func (cv *Float32) Set(v float32, chg change.Flags) change.Flags {
 }
 
 // Float64 tracks changes of bool values with a hook and Flags.
-// See also onchg package documentation.
+// See also onchg package documentation. 
 type Float64 struct {
 	v chgv.Float64
 	h Float64Hook
@@ -529,7 +514,7 @@ func (cv *Float64) Set(v float64, chg change.Flags) change.Flags {
 }
 
 // Complex64 tracks changes of bool values with a hook and Flags.
-// See also onchg package documentation.
+// See also onchg package documentation. 
 type Complex64 struct {
 	v chgv.Complex64
 	h Complex64Hook
@@ -566,7 +551,7 @@ func (cv *Complex64) Set(v complex64, chg change.Flags) change.Flags {
 }
 
 // Complex128 tracks changes of bool values with a hook and Flags.
-// See also onchg package documentation.
+// See also onchg package documentation. 
 type Complex128 struct {
 	v chgv.Complex128
 	h Complex128Hook
@@ -603,7 +588,7 @@ func (cv *Complex128) Set(v complex128, chg change.Flags) change.Flags {
 }
 
 // Byte tracks changes of bool values with a hook and Flags.
-// See also onchg package documentation.
+// See also onchg package documentation. 
 type Byte struct {
 	v chgv.Byte
 	h ByteHook
@@ -640,7 +625,7 @@ func (cv *Byte) Set(v byte, chg change.Flags) change.Flags {
 }
 
 // Rune tracks changes of bool values with a hook and Flags.
-// See also onchg package documentation.
+// See also onchg package documentation. 
 type Rune struct {
 	v chgv.Rune
 	h RuneHook
@@ -677,7 +662,7 @@ func (cv *Rune) Set(v rune, chg change.Flags) change.Flags {
 }
 
 // Uint tracks changes of bool values with a hook and Flags.
-// See also onchg package documentation.
+// See also onchg package documentation. 
 type Uint struct {
 	v chgv.Uint
 	h UintHook
@@ -714,7 +699,7 @@ func (cv *Uint) Set(v uint, chg change.Flags) change.Flags {
 }
 
 // Int tracks changes of bool values with a hook and Flags.
-// See also onchg package documentation.
+// See also onchg package documentation. 
 type Int struct {
 	v chgv.Int
 	h IntHook
@@ -751,7 +736,7 @@ func (cv *Int) Set(v int, chg change.Flags) change.Flags {
 }
 
 // UintPtr tracks changes of bool values with a hook and Flags.
-// See also onchg package documentation.
+// See also onchg package documentation. 
 type UintPtr struct {
 	v chgv.UintPtr
 	h UintPtrHook
@@ -788,7 +773,7 @@ func (cv *UintPtr) Set(v uintptr, chg change.Flags) change.Flags {
 }
 
 // String tracks changes of bool values with a hook and Flags.
-// See also onchg package documentation.
+// See also onchg package documentation. 
 type String struct {
 	v chgv.String
 	h StringHook
@@ -823,3 +808,4 @@ func (cv *String) Set(v string, chg change.Flags) change.Flags {
 	}
 	return chg
 }
+

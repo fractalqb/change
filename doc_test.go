@@ -13,15 +13,36 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-
-// Package change has the common parts for the sub packages that help
-// to track changes of values in an application. The sub packages
-// implement different trade offs between resource consumption –
-// memory and time – against features richness.  The changeable value
-// types of the sub packages all implement their respective interface
-// in this package which makes migration between the sub packages more
-// easy.
-//
-// Compare the following example with the examples from the sub
-// packages:
 package change
+
+import "fmt"
+
+func Example() {
+	user := struct {
+		Name   string
+		Logins int
+	}{
+		Name:   "John Doe",
+		Logins: 0,
+	}
+	// Tedious with plain Go, simpler with “change”:
+	var chg uint64
+	if user.Name != "John Doe" {
+		user.Name = "John Doe"
+		chg |= 1 // = (1<<0) = 0b01
+	}
+	if user.Logins != 1 {
+		user.Logins = 1 // = (1<<1) = 0b10
+		chg |= 2
+	}
+
+	fmt.Printf("Changes: 0b%b\n", chg)
+	if chg&1 == 0 {
+		fmt.Println("Name did not change")
+	} else {
+		fmt.Println("Name changed")
+	}
+	// Output:
+	// Changes: 0b10
+	// Name did not change
+}
