@@ -2,8 +2,10 @@ define(`onchgtype', `// $2 tracks changes of $1 values with caller-provided Flag
 // See also chgv package documentation.
 type $2 $1
 
+// Get returns the current $1 value.
 func (cv $2) Get() $1 { return $1(cv) }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *$2) Set(v $1, chg change.Flags) change.Flags {
 	if $1(*cv) == v {
 		return 0
@@ -13,9 +15,25 @@ func (cv *$2) Set(v $1, chg change.Flags) change.Flags {
 }
 ')dnl
 dnl
+// Copyright 2021 Marcus Perlick
+// This file is part of Go module github.com/fractalqb/change
+//
+// Foobar is free software: you can redistribute it and/or modify it
+// under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// Foobar is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+
 package chgv
 
-import "git.fractalqb.de/fractalqb/change"
+import "github.com/fractalqb/change"
 
 onchgtype(`bool', `Bool')
 onchgtype(`uint8', `Uint8')

@@ -21,10 +21,10 @@ import (
 	"github.com/fractalqb/change/chgv"
 )
 
-// ChgFlags is used to provide hooks that always return a Flags value. It is
-// used to provide default Flags when the caller of a Set operation passes
-// 0 Flags. Each method of ChgFlags is a type specific hook for a
-// change-detectable value in package onchg.
+// ChgFlag is used to provide hooks that always return a Flags
+// value. It is used to provide default Flags when the caller of a Set
+// operation passes 0 Flags. Each method of ChgFlag is a type specific
+// hook for a change-detectable value in package onchg.
 type ChgFlag change.Flags
 
 // Bool returns chg as change.Flags
@@ -129,20 +129,27 @@ type Bool struct {
 	h BoolHook
 }
 
+// NewBool creates a change-detectable Bool. See also section Hook
+// Funtions.
 func NewBool(init bool, hook BoolHook) *Bool {
 	return &Bool{v: chgv.Bool(init), h: hook}
 }
 
+// See section Hook Funtions.
 type BoolHook func(src *Bool, ov, nv bool, check bool) change.Flags
 
+// Reset does not call a hook, even if the value changes.
+// See also section Hook Funtions.
 func (cv *Bool) Reset(v bool, hook BoolHook) (bool, BoolHook) {
 	ov, oh := cv.v, cv.h
 	(*cv) = Bool{v: chgv.Bool(v), h: hook}
 	return ov.Get(), oh
 }
 
+// Get returns the current bool value.
 func (cv Bool) Get() bool { return cv.v.Get() }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Bool) Set(v bool, chg change.Flags) change.Flags {
 	if cv.h == nil {
 		return cv.v.Set(v, chg)
@@ -166,20 +173,27 @@ type Uint8 struct {
 	h Uint8Hook
 }
 
+// NewUint8 creates a change-detectable Uint8. See also section Hook
+// Funtions.
 func NewUint8(init uint8, hook Uint8Hook) *Uint8 {
 	return &Uint8{v: chgv.Uint8(init), h: hook}
 }
 
+// See section Hook Funtions.
 type Uint8Hook func(src *Uint8, ov, nv uint8, check bool) change.Flags
 
+// Reset does not call a hook, even if the value changes.
+// See also section Hook Funtions.
 func (cv *Uint8) Reset(v uint8, hook Uint8Hook) (uint8, Uint8Hook) {
 	ov, oh := cv.v, cv.h
 	(*cv) = Uint8{v: chgv.Uint8(v), h: hook}
 	return ov.Get(), oh
 }
 
+// Get returns the current uint8 value.
 func (cv Uint8) Get() uint8 { return cv.v.Get() }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Uint8) Set(v uint8, chg change.Flags) change.Flags {
 	if cv.h == nil {
 		return cv.v.Set(v, chg)
@@ -203,20 +217,27 @@ type Uint16 struct {
 	h Uint16Hook
 }
 
+// NewUint16 creates a change-detectable Uint16. See also section Hook
+// Funtions.
 func NewUint16(init uint16, hook Uint16Hook) *Uint16 {
 	return &Uint16{v: chgv.Uint16(init), h: hook}
 }
 
+// See section Hook Funtions.
 type Uint16Hook func(src *Uint16, ov, nv uint16, check bool) change.Flags
 
+// Reset does not call a hook, even if the value changes.
+// See also section Hook Funtions.
 func (cv *Uint16) Reset(v uint16, hook Uint16Hook) (uint16, Uint16Hook) {
 	ov, oh := cv.v, cv.h
 	(*cv) = Uint16{v: chgv.Uint16(v), h: hook}
 	return ov.Get(), oh
 }
 
+// Get returns the current uint16 value.
 func (cv Uint16) Get() uint16 { return cv.v.Get() }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Uint16) Set(v uint16, chg change.Flags) change.Flags {
 	if cv.h == nil {
 		return cv.v.Set(v, chg)
@@ -240,20 +261,27 @@ type Uint32 struct {
 	h Uint32Hook
 }
 
+// NewUint32 creates a change-detectable Uint32. See also section Hook
+// Funtions.
 func NewUint32(init uint32, hook Uint32Hook) *Uint32 {
 	return &Uint32{v: chgv.Uint32(init), h: hook}
 }
 
+// See section Hook Funtions.
 type Uint32Hook func(src *Uint32, ov, nv uint32, check bool) change.Flags
 
+// Reset does not call a hook, even if the value changes.
+// See also section Hook Funtions.
 func (cv *Uint32) Reset(v uint32, hook Uint32Hook) (uint32, Uint32Hook) {
 	ov, oh := cv.v, cv.h
 	(*cv) = Uint32{v: chgv.Uint32(v), h: hook}
 	return ov.Get(), oh
 }
 
+// Get returns the current uint32 value.
 func (cv Uint32) Get() uint32 { return cv.v.Get() }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Uint32) Set(v uint32, chg change.Flags) change.Flags {
 	if cv.h == nil {
 		return cv.v.Set(v, chg)
@@ -277,20 +305,27 @@ type Uint64 struct {
 	h Uint64Hook
 }
 
+// NewUint64 creates a change-detectable Uint64. See also section Hook
+// Funtions.
 func NewUint64(init uint64, hook Uint64Hook) *Uint64 {
 	return &Uint64{v: chgv.Uint64(init), h: hook}
 }
 
+// See section Hook Funtions.
 type Uint64Hook func(src *Uint64, ov, nv uint64, check bool) change.Flags
 
+// Reset does not call a hook, even if the value changes.
+// See also section Hook Funtions.
 func (cv *Uint64) Reset(v uint64, hook Uint64Hook) (uint64, Uint64Hook) {
 	ov, oh := cv.v, cv.h
 	(*cv) = Uint64{v: chgv.Uint64(v), h: hook}
 	return ov.Get(), oh
 }
 
+// Get returns the current uint64 value.
 func (cv Uint64) Get() uint64 { return cv.v.Get() }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Uint64) Set(v uint64, chg change.Flags) change.Flags {
 	if cv.h == nil {
 		return cv.v.Set(v, chg)
@@ -314,20 +349,27 @@ type Int8 struct {
 	h Int8Hook
 }
 
+// NewInt8 creates a change-detectable Int8. See also section Hook
+// Funtions.
 func NewInt8(init int8, hook Int8Hook) *Int8 {
 	return &Int8{v: chgv.Int8(init), h: hook}
 }
 
+// See section Hook Funtions.
 type Int8Hook func(src *Int8, ov, nv int8, check bool) change.Flags
 
+// Reset does not call a hook, even if the value changes.
+// See also section Hook Funtions.
 func (cv *Int8) Reset(v int8, hook Int8Hook) (int8, Int8Hook) {
 	ov, oh := cv.v, cv.h
 	(*cv) = Int8{v: chgv.Int8(v), h: hook}
 	return ov.Get(), oh
 }
 
+// Get returns the current int8 value.
 func (cv Int8) Get() int8 { return cv.v.Get() }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Int8) Set(v int8, chg change.Flags) change.Flags {
 	if cv.h == nil {
 		return cv.v.Set(v, chg)
@@ -351,20 +393,27 @@ type Int16 struct {
 	h Int16Hook
 }
 
+// NewInt16 creates a change-detectable Int16. See also section Hook
+// Funtions.
 func NewInt16(init int16, hook Int16Hook) *Int16 {
 	return &Int16{v: chgv.Int16(init), h: hook}
 }
 
+// See section Hook Funtions.
 type Int16Hook func(src *Int16, ov, nv int16, check bool) change.Flags
 
+// Reset does not call a hook, even if the value changes.
+// See also section Hook Funtions.
 func (cv *Int16) Reset(v int16, hook Int16Hook) (int16, Int16Hook) {
 	ov, oh := cv.v, cv.h
 	(*cv) = Int16{v: chgv.Int16(v), h: hook}
 	return ov.Get(), oh
 }
 
+// Get returns the current int16 value.
 func (cv Int16) Get() int16 { return cv.v.Get() }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Int16) Set(v int16, chg change.Flags) change.Flags {
 	if cv.h == nil {
 		return cv.v.Set(v, chg)
@@ -388,20 +437,27 @@ type Int32 struct {
 	h Int32Hook
 }
 
+// NewInt32 creates a change-detectable Int32. See also section Hook
+// Funtions.
 func NewInt32(init int32, hook Int32Hook) *Int32 {
 	return &Int32{v: chgv.Int32(init), h: hook}
 }
 
+// See section Hook Funtions.
 type Int32Hook func(src *Int32, ov, nv int32, check bool) change.Flags
 
+// Reset does not call a hook, even if the value changes.
+// See also section Hook Funtions.
 func (cv *Int32) Reset(v int32, hook Int32Hook) (int32, Int32Hook) {
 	ov, oh := cv.v, cv.h
 	(*cv) = Int32{v: chgv.Int32(v), h: hook}
 	return ov.Get(), oh
 }
 
+// Get returns the current int32 value.
 func (cv Int32) Get() int32 { return cv.v.Get() }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Int32) Set(v int32, chg change.Flags) change.Flags {
 	if cv.h == nil {
 		return cv.v.Set(v, chg)
@@ -425,20 +481,27 @@ type Int64 struct {
 	h Int64Hook
 }
 
+// NewInt64 creates a change-detectable Int64. See also section Hook
+// Funtions.
 func NewInt64(init int64, hook Int64Hook) *Int64 {
 	return &Int64{v: chgv.Int64(init), h: hook}
 }
 
+// See section Hook Funtions.
 type Int64Hook func(src *Int64, ov, nv int64, check bool) change.Flags
 
+// Reset does not call a hook, even if the value changes.
+// See also section Hook Funtions.
 func (cv *Int64) Reset(v int64, hook Int64Hook) (int64, Int64Hook) {
 	ov, oh := cv.v, cv.h
 	(*cv) = Int64{v: chgv.Int64(v), h: hook}
 	return ov.Get(), oh
 }
 
+// Get returns the current int64 value.
 func (cv Int64) Get() int64 { return cv.v.Get() }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Int64) Set(v int64, chg change.Flags) change.Flags {
 	if cv.h == nil {
 		return cv.v.Set(v, chg)
@@ -462,20 +525,27 @@ type Float32 struct {
 	h Float32Hook
 }
 
+// NewFloat32 creates a change-detectable Float32. See also section Hook
+// Funtions.
 func NewFloat32(init float32, hook Float32Hook) *Float32 {
 	return &Float32{v: chgv.Float32(init), h: hook}
 }
 
+// See section Hook Funtions.
 type Float32Hook func(src *Float32, ov, nv float32, check bool) change.Flags
 
+// Reset does not call a hook, even if the value changes.
+// See also section Hook Funtions.
 func (cv *Float32) Reset(v float32, hook Float32Hook) (float32, Float32Hook) {
 	ov, oh := cv.v, cv.h
 	(*cv) = Float32{v: chgv.Float32(v), h: hook}
 	return ov.Get(), oh
 }
 
+// Get returns the current float32 value.
 func (cv Float32) Get() float32 { return cv.v.Get() }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Float32) Set(v float32, chg change.Flags) change.Flags {
 	if cv.h == nil {
 		return cv.v.Set(v, chg)
@@ -499,20 +569,27 @@ type Float64 struct {
 	h Float64Hook
 }
 
+// NewFloat64 creates a change-detectable Float64. See also section Hook
+// Funtions.
 func NewFloat64(init float64, hook Float64Hook) *Float64 {
 	return &Float64{v: chgv.Float64(init), h: hook}
 }
 
+// See section Hook Funtions.
 type Float64Hook func(src *Float64, ov, nv float64, check bool) change.Flags
 
+// Reset does not call a hook, even if the value changes.
+// See also section Hook Funtions.
 func (cv *Float64) Reset(v float64, hook Float64Hook) (float64, Float64Hook) {
 	ov, oh := cv.v, cv.h
 	(*cv) = Float64{v: chgv.Float64(v), h: hook}
 	return ov.Get(), oh
 }
 
+// Get returns the current float64 value.
 func (cv Float64) Get() float64 { return cv.v.Get() }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Float64) Set(v float64, chg change.Flags) change.Flags {
 	if cv.h == nil {
 		return cv.v.Set(v, chg)
@@ -536,20 +613,27 @@ type Complex64 struct {
 	h Complex64Hook
 }
 
+// NewComplex64 creates a change-detectable Complex64. See also section Hook
+// Funtions.
 func NewComplex64(init complex64, hook Complex64Hook) *Complex64 {
 	return &Complex64{v: chgv.Complex64(init), h: hook}
 }
 
+// See section Hook Funtions.
 type Complex64Hook func(src *Complex64, ov, nv complex64, check bool) change.Flags
 
+// Reset does not call a hook, even if the value changes.
+// See also section Hook Funtions.
 func (cv *Complex64) Reset(v complex64, hook Complex64Hook) (complex64, Complex64Hook) {
 	ov, oh := cv.v, cv.h
 	(*cv) = Complex64{v: chgv.Complex64(v), h: hook}
 	return ov.Get(), oh
 }
 
+// Get returns the current complex64 value.
 func (cv Complex64) Get() complex64 { return cv.v.Get() }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Complex64) Set(v complex64, chg change.Flags) change.Flags {
 	if cv.h == nil {
 		return cv.v.Set(v, chg)
@@ -573,20 +657,27 @@ type Complex128 struct {
 	h Complex128Hook
 }
 
+// NewComplex128 creates a change-detectable Complex128. See also section Hook
+// Funtions.
 func NewComplex128(init complex128, hook Complex128Hook) *Complex128 {
 	return &Complex128{v: chgv.Complex128(init), h: hook}
 }
 
+// See section Hook Funtions.
 type Complex128Hook func(src *Complex128, ov, nv complex128, check bool) change.Flags
 
+// Reset does not call a hook, even if the value changes.
+// See also section Hook Funtions.
 func (cv *Complex128) Reset(v complex128, hook Complex128Hook) (complex128, Complex128Hook) {
 	ov, oh := cv.v, cv.h
 	(*cv) = Complex128{v: chgv.Complex128(v), h: hook}
 	return ov.Get(), oh
 }
 
+// Get returns the current complex128 value.
 func (cv Complex128) Get() complex128 { return cv.v.Get() }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Complex128) Set(v complex128, chg change.Flags) change.Flags {
 	if cv.h == nil {
 		return cv.v.Set(v, chg)
@@ -610,20 +701,27 @@ type Byte struct {
 	h ByteHook
 }
 
+// NewByte creates a change-detectable Byte. See also section Hook
+// Funtions.
 func NewByte(init byte, hook ByteHook) *Byte {
 	return &Byte{v: chgv.Byte(init), h: hook}
 }
 
+// See section Hook Funtions.
 type ByteHook func(src *Byte, ov, nv byte, check bool) change.Flags
 
+// Reset does not call a hook, even if the value changes.
+// See also section Hook Funtions.
 func (cv *Byte) Reset(v byte, hook ByteHook) (byte, ByteHook) {
 	ov, oh := cv.v, cv.h
 	(*cv) = Byte{v: chgv.Byte(v), h: hook}
 	return ov.Get(), oh
 }
 
+// Get returns the current byte value.
 func (cv Byte) Get() byte { return cv.v.Get() }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Byte) Set(v byte, chg change.Flags) change.Flags {
 	if cv.h == nil {
 		return cv.v.Set(v, chg)
@@ -647,20 +745,27 @@ type Rune struct {
 	h RuneHook
 }
 
+// NewRune creates a change-detectable Rune. See also section Hook
+// Funtions.
 func NewRune(init rune, hook RuneHook) *Rune {
 	return &Rune{v: chgv.Rune(init), h: hook}
 }
 
+// See section Hook Funtions.
 type RuneHook func(src *Rune, ov, nv rune, check bool) change.Flags
 
+// Reset does not call a hook, even if the value changes.
+// See also section Hook Funtions.
 func (cv *Rune) Reset(v rune, hook RuneHook) (rune, RuneHook) {
 	ov, oh := cv.v, cv.h
 	(*cv) = Rune{v: chgv.Rune(v), h: hook}
 	return ov.Get(), oh
 }
 
+// Get returns the current rune value.
 func (cv Rune) Get() rune { return cv.v.Get() }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Rune) Set(v rune, chg change.Flags) change.Flags {
 	if cv.h == nil {
 		return cv.v.Set(v, chg)
@@ -684,20 +789,27 @@ type Uint struct {
 	h UintHook
 }
 
+// NewUint creates a change-detectable Uint. See also section Hook
+// Funtions.
 func NewUint(init uint, hook UintHook) *Uint {
 	return &Uint{v: chgv.Uint(init), h: hook}
 }
 
+// See section Hook Funtions.
 type UintHook func(src *Uint, ov, nv uint, check bool) change.Flags
 
+// Reset does not call a hook, even if the value changes.
+// See also section Hook Funtions.
 func (cv *Uint) Reset(v uint, hook UintHook) (uint, UintHook) {
 	ov, oh := cv.v, cv.h
 	(*cv) = Uint{v: chgv.Uint(v), h: hook}
 	return ov.Get(), oh
 }
 
+// Get returns the current uint value.
 func (cv Uint) Get() uint { return cv.v.Get() }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Uint) Set(v uint, chg change.Flags) change.Flags {
 	if cv.h == nil {
 		return cv.v.Set(v, chg)
@@ -721,20 +833,27 @@ type Int struct {
 	h IntHook
 }
 
+// NewInt creates a change-detectable Int. See also section Hook
+// Funtions.
 func NewInt(init int, hook IntHook) *Int {
 	return &Int{v: chgv.Int(init), h: hook}
 }
 
+// See section Hook Funtions.
 type IntHook func(src *Int, ov, nv int, check bool) change.Flags
 
+// Reset does not call a hook, even if the value changes.
+// See also section Hook Funtions.
 func (cv *Int) Reset(v int, hook IntHook) (int, IntHook) {
 	ov, oh := cv.v, cv.h
 	(*cv) = Int{v: chgv.Int(v), h: hook}
 	return ov.Get(), oh
 }
 
+// Get returns the current int value.
 func (cv Int) Get() int { return cv.v.Get() }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Int) Set(v int, chg change.Flags) change.Flags {
 	if cv.h == nil {
 		return cv.v.Set(v, chg)
@@ -758,20 +877,27 @@ type UintPtr struct {
 	h UintPtrHook
 }
 
+// NewUintPtr creates a change-detectable UintPtr. See also section Hook
+// Funtions.
 func NewUintPtr(init uintptr, hook UintPtrHook) *UintPtr {
 	return &UintPtr{v: chgv.UintPtr(init), h: hook}
 }
 
+// See section Hook Funtions.
 type UintPtrHook func(src *UintPtr, ov, nv uintptr, check bool) change.Flags
 
+// Reset does not call a hook, even if the value changes.
+// See also section Hook Funtions.
 func (cv *UintPtr) Reset(v uintptr, hook UintPtrHook) (uintptr, UintPtrHook) {
 	ov, oh := cv.v, cv.h
 	(*cv) = UintPtr{v: chgv.UintPtr(v), h: hook}
 	return ov.Get(), oh
 }
 
+// Get returns the current uintptr value.
 func (cv UintPtr) Get() uintptr { return cv.v.Get() }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *UintPtr) Set(v uintptr, chg change.Flags) change.Flags {
 	if cv.h == nil {
 		return cv.v.Set(v, chg)
@@ -795,20 +921,27 @@ type String struct {
 	h StringHook
 }
 
+// NewString creates a change-detectable String. See also section Hook
+// Funtions.
 func NewString(init string, hook StringHook) *String {
 	return &String{v: chgv.String(init), h: hook}
 }
 
+// See section Hook Funtions.
 type StringHook func(src *String, ov, nv string, check bool) change.Flags
 
+// Reset does not call a hook, even if the value changes.
+// See also section Hook Funtions.
 func (cv *String) Reset(v string, hook StringHook) (string, StringHook) {
 	ov, oh := cv.v, cv.h
 	(*cv) = String{v: chgv.String(v), h: hook}
 	return ov.Get(), oh
 }
 
+// Get returns the current string value.
 func (cv String) Get() string { return cv.v.Get() }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *String) Set(v string, chg change.Flags) change.Flags {
 	if cv.h == nil {
 		return cv.v.Set(v, chg)

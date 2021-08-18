@@ -32,9 +32,9 @@ func Example() {
 		Logins: *NewInt(0, nil, 0),
 	}
 	ObserveFields(&user, 0, false, change.AllFlags)
-	user.ObsRegister(0, nil, UpdateFunc(func(tag interface{}, e Event) {
+	user.ObsRegister(0, nil, &UpdateFunc{func(tag interface{}, e Event) {
 		fmt.Println("Tag:", tag, "Event:", e)
-	}))
+	}})
 
 	chg := user.Name.Set("John Doe", 0)
 	chg |= user.Logins.Set(1, 2)

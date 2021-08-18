@@ -43,22 +43,28 @@ func (fe FieldEvent) String() string {
 		fe.Event)
 }
 
-type FieldUpdate struct {
-	Object Observable
-	Field  string
+type fieldUpdate struct {
+	object Observable
+	field  string
 }
 
-func (f FieldUpdate) Check(_ interface{}, _ Event) (change.Flags, error) {
+func (f fieldUpdate) Check(_ interface{}, _ Event) (change.Flags, error) {
 	return 0, nil
 }
 
-func (f FieldUpdate) Update(tag interface{}, e Event) {
-	fe := FieldEvent{Event: e, fieldTag: tag, field: f.Field}
-	f.Object.ObsEach(func(tag interface{}, o Observer) {
+func (f fieldUpdate) Update(tag interface{}, e Event) {
+	fe := FieldEvent{Event: e, fieldTag: tag, field: f.field}
+	f.object.ObsEach(func(tag interface{}, o Observer) {
 		o.Update(tag, fe)
 	})
 }
 
+// ObserveFields registers the struct obj as an Observer to all its Observable
+// fields so that updates of the fields are forwarded to obj's Observers as
+// FieldEvents.
+//
+// Field Tags
+//
 // TODO doc `chgv:",tag=some-tag,flag=0x10"`
 func ObserveFields(obj Observable, prio int, reflectedFieldTag bool, flags change.Flags) error {
 	val := reflect.Indirect(reflect.ValueOf(obj))
@@ -106,9 +112,9 @@ func ObserveFields(obj Observable, prio int, reflectedFieldTag bool, flags chang
 			if reflectedFieldTag {
 				regTag = sf
 			}
-			fobs.ObsRegister(prio, regTag, FieldUpdate{
-				Object: obj,
-				Field:  field,
+			fobs.ObsRegister(prio, regTag, fieldUpdate{
+				object: obj,
+				field:  field,
 			})
 			if setFlags && defaultFlag == 0 {
 				if flags == 0 {

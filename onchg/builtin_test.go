@@ -17,7 +17,7 @@
 package onchg
 
 import (
-	"fmt"
+	"testing"
 
 	"github.com/fractalqb/change"
 )
@@ -44,21 +44,71 @@ var (
 	_ change.String     = (*String)(nil)
 )
 
-func ExampleString() {
-	s := NewString("", func(_ *String, ov, nv string, pre bool) change.Flags {
-		if pre {
-			if nv == "" {
-				return 0
-			}
-		} else {
-			fmt.Printf("Changed from '%s' to '%s'\n", ov, nv)
+func TestInt(t *testing.T) {
+	t.Run("zero value", func(t *testing.T) {
+		var iv Int
+		if iv.Get() != 0 {
+			t.Error("Int does not initialize to zero value")
 		}
-		return 1
 	})
-	fmt.Println("Chg:", s.Set("Embrace change", 0))
-	fmt.Println("Chg:", s.Set("", 0))
-	// Output:
-	// Changed from '' to 'Embrace change'
-	// Chg: 1
-	// Chg: 0
+	t.Run("without hook", func(t *testing.T) {
+		iv := *NewInt(4, nil)
+		if v := iv.Get(); v != 4 {
+			t.Errorf("Int initialization failed. Got %d want 4", v)
+		}
+		if chg := iv.Set(4, 1); chg != 0 {
+			t.Errorf("Unexpected change flags 0x%x, want 0", chg)
+		}
+		if v := iv.Get(); v != 4 {
+			t.Errorf("Unexpected Int value: %d want 4", v)
+		}
+		if chg := iv.Set(3, 2); chg != 2 {
+			t.Errorf("Invalid change flags 0x%x, want 2", chg)
+		}
+		if v := iv.Get(); v != 3 {
+			t.Errorf("Unexpected Int value: %d want 3", v)
+		}
+	})
+	t.Run("hook veto", func(t *testing.T) {
+		iv := *NewInt(4, func(src *Int, ov, nv int, check bool) change.Flags {
+			if !check {
+				t.Error("Hook was called despite veto")
+			}
+			return 0 // Always veto
+		})
+		chg := iv.Set(3, 1)
+		if chg != 0 {
+			t.Errorf("Unexpected change flags 0x%x, want 0", chg)
+		}
+		if v := iv.Get(); v != 4 {
+			t.Errorf("Unexpected Int value: %d want 4", v)
+		}
+	})
+	t.Run("hook flags", func(t *testing.T) {
+		iv := *NewInt(4, ChgFlag(1).Int)
+		if v := iv.Get(); v != 4 {
+			t.Errorf("Int initialization failed. Got %d want 4", v)
+		}
+		if chg := iv.Set(4, 0); chg != 0 {
+			t.Errorf("Unexpected change flags 0x%x, want 0", chg)
+		}
+		if chg := iv.Set(4, 2); chg != 0 {
+			t.Errorf("Unexpected change flags 0x%x, want 0", chg)
+		}
+		if v := iv.Get(); v != 4 {
+			t.Errorf("Unexpected Int value: %d want 4", v)
+		}
+		if chg := iv.Set(3, 2); chg != 2 {
+			t.Errorf("Invalid change flags 0x%x, want 2", chg)
+		}
+		if v := iv.Get(); v != 3 {
+			t.Errorf("Unexpected Int value: %d want 3", v)
+		}
+		if chg := iv.Set(2, 0); chg != 1 {
+			t.Errorf("Invalid change flags 0x%x, want 1", chg)
+		}
+		if v := iv.Get(); v != 2 {
+			t.Errorf("Unexpected Int value: %d want 2", v)
+		}
+	})
 }

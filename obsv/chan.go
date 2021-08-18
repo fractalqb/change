@@ -27,7 +27,13 @@ type TaggedEvent struct {
 	Tag interface{}
 }
 
+// An ObservingChan wraps a Go channel so that the channel's input
+// becomes an Observer, i.e. the ObservingChan can register with
+// Observables and then will send tagged update Events to the channel.
 type ObservingChan struct {
+	// If CheckFunc is not nil it will be called in the
+	// ObservingChan's Check method.
+	CheckFunc func(tag interface{}, e Event) (change.Flags, error)
 	c         chan<- TaggedEvent
 	drop      bool
 	dropCount uint64
@@ -45,8 +51,11 @@ func (oc ObservingChan) DropCount() uint64 {
 	return atomic.LoadUint64(&oc.dropCount)
 }
 
-func (oc ObservingChan) Check(_ interface{}, _ Event) (change.Flags, error) {
-	return 0, nil
+func (oc ObservingChan) Check(tag interface{}, e Event) (change.Flags, error) {
+	if oc.CheckFunc == nil {
+		return 0, nil
+	}
+	return oc.CheckFunc(tag, e)
 }
 
 func (oc ObservingChan) Update(tag interface{}, e Event) {
@@ -62,6 +71,8 @@ func (oc ObservingChan) Update(tag interface{}, e Event) {
 	}
 }
 
+// An ObservableChan wraps a Go channel of TaggedEvents so that the
+// channel's output becomes Observable.
 type ObservableChan struct {
 	c    <-chan TaggedEvent
 	stop chan struct{}
@@ -78,9 +89,7 @@ LOOP:
 	for {
 		select {
 		case e := <-oc.c:
-			if oc.stub != nil {
-				oc.stub.notify(e)
-			}
+			oc.forward(e)
 		case <-oc.stop:
 			break LOOP
 		}
@@ -93,4 +102,17 @@ func (oc *ObservableChan) Stop() {
 		oc.stop <- struct{}{}
 		<-oc.stop
 	}
+}
+
+func (oc *ObservableChan) forward(te TaggedEvent) {
+	if oc.stub == nil {
+		return
+	}
+	oc.stub.veto = nil
+	_, veto := oc.stub.check(te) // TODO what to do with chg?
+	if veto != nil {
+		oc.stub.veto = veto
+		return
+	}
+	oc.stub.update(te)
 }

@@ -49,9 +49,9 @@ func ExampleObservingChan() {
 func ExampleObservableChan() {
 	c := make(chan TaggedEvent)
 	o := NewObservableChan(c)
-	o.ObsRegister(0, "the-tag", UpdateFunc(func(tag interface{}, e Event) {
+	o.ObsRegister(0, "the-tag", &UpdateFunc{func(tag interface{}, e Event) {
 		fmt.Println(tag, e)
-	}))
+	}})
 	go o.Start()
 	c <- TaggedEvent{Event: eventBase{}, Tag: "/dev/null"}
 	o.Stop()

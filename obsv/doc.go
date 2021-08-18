@@ -14,9 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 
-// Package obsv implements changeable values that follow the GoF
-// Observer pattern. However, it is not a strict implementation but
-// has been enriched with additional features:
+// Package obsv implements change-detectable values that also
+// implement the Observer interface following the GoF Observer
+// pattern. However, it is not a strict implementation of GoF Observer
+// but has been enriched with additional features:
 //
 //  - The Set method of changeable values is compatible with the Set
 //    methods of the other sub packages, i.e. it handles
@@ -31,9 +32,13 @@
 //    before the actual change is made.
 //
 //  - Observers Check methods can provide Falgs. This is to free the
-//    caller of Set methods from dealing with Flags when not needed.
+//    caller of Set methods from dealing with Flags, if desired.
 //
 //  - Value-specific and observer-specific tags can be defined so
 //    that they will be passed to the observer when a change occurs.
 //    Observer-specific tags override vaule-specific tags.
+//
+// Set Methods
+//
+// TODO: describe principle of Set methods.
 package obsv

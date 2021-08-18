@@ -22,33 +22,47 @@ import (
 	"github.com/fractalqb/change"
 )
 
+// Veto keeps the information why a Set operation was stopped by which
+// Obersver.  The Veto can be requested from each Observable until the
+// next call to its Set method.
 type Veto struct {
 	stopper Observer
 	err     error
 }
 
+// StoppedBy returns the Observer that stopped the Set operation with
+// its Veto.
 func (v *Veto) StoppedBy() Observer { return v.stopper }
-func (v *Veto) Error() string       { return "veto: " + v.err.Error() }
-func (v *Veto) Unwrap() error       { return v.err }
 
+func (v *Veto) Error() string { return "veto: " + v.err.Error() }
+func (v *Veto) Unwrap() error { return v.err }
+
+// Observer must be comparable to make Observable::ObsRegister and
+// Observable::ObsUnregister work.
 type Observer interface {
 	// Check lets the observer inspect the change before it is executed. By
-	// returning a non-nil error the observer can prohibit the change.
+	// returning a non-nil error the observer can veto the change.
 	// Check also can override the default change.Flags used for the Set
-	// operation by returning Flags != 0.
-	Check(tag interface{}, e Event) (change.Flags, error)
+	// operation by returning chg != 0.
+	Check(tag interface{}, e Event) (chg change.Flags, veto error)
 	// Update notifies the observer about a change event.
 	Update(tag interface{}, e Event)
 }
 
-type UpdateFunc func(tag interface{}, e Event)
+// Use UpdateFunc to wrap an update function so that it can be used as
+// an Observer. Note that the pointer to the UpdateFunc object will be
+// used to implement equality. This is because Go functions are not
+// comparable.
+type UpdateFunc struct {
+	F func(tag interface{}, e Event)
+}
 
 func (_ UpdateFunc) Check(tag interface{}, e Event) (change.Flags, error) {
 	return 0, nil
 }
 
-func (f UpdateFunc) Update(tag interface{}, e Event) {
-	f(tag, e)
+func (uf *UpdateFunc) Update(tag interface{}, e Event) {
+	uf.F(tag, e)
 }
 
 type Observable interface {
@@ -56,6 +70,7 @@ type Observable interface {
 	SetObsDefaults(tag interface{}, chg change.Flags)
 	ObsRegister(prio int, tag interface{}, o Observer)
 	ObsUnregister(o Observer)
+	// ObsLastVeto returns the Veto from the last Set call, if any.
 	ObsLastVeto() *Veto
 	ObsEach(do func(tag interface{}, o Observer))
 }
@@ -63,6 +78,14 @@ type Observable interface {
 type Event interface {
 	Source() Observable
 	Chg() change.Flags
+}
+
+type ValueChange interface {
+	Event
+	// OldValue returns the value befor the change.
+	OldValue() interface{}
+	// NewValue returns the current value, i.e. after the change.
+	NewValue() interface{}
 }
 
 type stub struct {
@@ -98,7 +121,7 @@ func (s *stub) check(e Event) (change.Flags, *Veto) {
 	return e.Chg(), nil
 }
 
-func (s *stub) notify(e Event) {
+func (s *stub) update(e Event) {
 	for _, oln := range s.obsls {
 		if oln.tag != nil {
 			oln.obs.Update(oln.tag, e)

@@ -51,14 +51,14 @@ var (
 
 func ExampleString() {
 	str := *NewString("", "example string", 4711)
-	str.ObsRegister(0, nil, UpdateFunc(func(tag interface{}, e Event) {
+	str.ObsRegister(0, nil, &UpdateFunc{func(tag interface{}, e Event) {
 		chg := e.(StringChg)
 		fmt.Printf("Tage: %+v\n", tag)
 		fmt.Printf("Event: '%s'→'%s': %d\n",
 			chg.OldValue(),
 			chg.NewValue(),
 			e.Chg())
-	}))
+	}})
 	fmt.Println(str.Set("Observe this change!", 0), str.ObsLastVeto())
 	// Output:
 	// Tage: example string

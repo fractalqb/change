@@ -17,6 +17,8 @@
 package chgv
 
 import (
+	"testing"
+
 	"github.com/fractalqb/change"
 )
 
@@ -41,3 +43,38 @@ var (
 	_ change.UintPtr    = (*UintPtr)(nil)
 	_ change.String     = (*String)(nil)
 )
+
+func TestInt(t *testing.T) {
+	t.Run("zero value", func(t *testing.T) {
+		var iv Int
+		if iv.Get() != 0 {
+			t.Error("Int does not initialize to zero value")
+		}
+	})
+	t.Run("init", func(t *testing.T) {
+		iv := Int(4)
+		if v := iv.Get(); v != 4 {
+			t.Errorf("Int initialization failed. Got %d want 4", v)
+		}
+	})
+	t.Run("unchanged set", func(t *testing.T) {
+		iv := Int(4)
+		chg := iv.Set(4, 1)
+		if v := iv.Get(); v != 4 {
+			t.Errorf("Got unexpeted value %d, want 4", v)
+		}
+		if chg != 0 {
+			t.Errorf("Unexpected change flags 0x%x, want 0", chg)
+		}
+	})
+	t.Run("changing set", func(t *testing.T) {
+		iv := Int(4)
+		chg := iv.Set(0, 1)
+		if v := iv.Get(); v != 0 {
+			t.Errorf("Got unexpeted value %d, want 0", v)
+		}
+		if chg != 1 {
+			t.Errorf("Unexpected change flags 0x%x, want 1", chg)
+		}
+	})
+}

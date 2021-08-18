@@ -26,6 +26,7 @@ type Time interface {
 	Set(v time.Time, chg Flags) Flags
 }
 
+// Duration is the common interface of change-detecable time.Duration values.
 type Duration interface {
 	Get() time.Duration
 	Set(v time.Duration, chg Flags) Flags

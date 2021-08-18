@@ -28,8 +28,8 @@ func Example() {
 		Logins Int
 	}{
 		Name: *NewString("John Doe", ChgFlag(1).String),
-		Logins: *NewInt(0, func(i *Int, o, n int, pre bool) change.Flags {
-			if !pre {
+		Logins: *NewInt(0, func(_ *Int, o, n int, check bool) change.Flags {
+			if !check {
 				fmt.Printf("changed logins from %d to %d\n", o, n)
 			}
 			return 2

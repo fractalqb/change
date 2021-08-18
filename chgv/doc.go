@@ -23,4 +23,8 @@
 //
 // While these changeable values are rather bare bones they come
 // without memory overhead – unlike most observable libraries.
+//
+// Set Methods
+//
+// TODO: describe principle of Set methods.
 package chgv

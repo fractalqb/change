@@ -22,8 +22,10 @@ import "github.com/fractalqb/change"
 // See also chgv package documentation.
 type Bool bool
 
+// Get returns the current bool value.
 func (cv Bool) Get() bool { return bool(cv) }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Bool) Set(v bool, chg change.Flags) change.Flags {
 	if bool(*cv) == v {
 		return 0
@@ -36,8 +38,10 @@ func (cv *Bool) Set(v bool, chg change.Flags) change.Flags {
 // See also chgv package documentation.
 type Uint8 uint8
 
+// Get returns the current uint8 value.
 func (cv Uint8) Get() uint8 { return uint8(cv) }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Uint8) Set(v uint8, chg change.Flags) change.Flags {
 	if uint8(*cv) == v {
 		return 0
@@ -50,8 +54,10 @@ func (cv *Uint8) Set(v uint8, chg change.Flags) change.Flags {
 // See also chgv package documentation.
 type Uint16 uint16
 
+// Get returns the current uint16 value.
 func (cv Uint16) Get() uint16 { return uint16(cv) }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Uint16) Set(v uint16, chg change.Flags) change.Flags {
 	if uint16(*cv) == v {
 		return 0
@@ -64,8 +70,10 @@ func (cv *Uint16) Set(v uint16, chg change.Flags) change.Flags {
 // See also chgv package documentation.
 type Uint32 uint32
 
+// Get returns the current uint32 value.
 func (cv Uint32) Get() uint32 { return uint32(cv) }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Uint32) Set(v uint32, chg change.Flags) change.Flags {
 	if uint32(*cv) == v {
 		return 0
@@ -78,8 +86,10 @@ func (cv *Uint32) Set(v uint32, chg change.Flags) change.Flags {
 // See also chgv package documentation.
 type Uint64 uint64
 
+// Get returns the current uint64 value.
 func (cv Uint64) Get() uint64 { return uint64(cv) }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Uint64) Set(v uint64, chg change.Flags) change.Flags {
 	if uint64(*cv) == v {
 		return 0
@@ -92,8 +102,10 @@ func (cv *Uint64) Set(v uint64, chg change.Flags) change.Flags {
 // See also chgv package documentation.
 type Int8 int8
 
+// Get returns the current int8 value.
 func (cv Int8) Get() int8 { return int8(cv) }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Int8) Set(v int8, chg change.Flags) change.Flags {
 	if int8(*cv) == v {
 		return 0
@@ -106,8 +118,10 @@ func (cv *Int8) Set(v int8, chg change.Flags) change.Flags {
 // See also chgv package documentation.
 type Int16 int16
 
+// Get returns the current int16 value.
 func (cv Int16) Get() int16 { return int16(cv) }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Int16) Set(v int16, chg change.Flags) change.Flags {
 	if int16(*cv) == v {
 		return 0
@@ -120,8 +134,10 @@ func (cv *Int16) Set(v int16, chg change.Flags) change.Flags {
 // See also chgv package documentation.
 type Int32 int32
 
+// Get returns the current int32 value.
 func (cv Int32) Get() int32 { return int32(cv) }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Int32) Set(v int32, chg change.Flags) change.Flags {
 	if int32(*cv) == v {
 		return 0
@@ -134,8 +150,10 @@ func (cv *Int32) Set(v int32, chg change.Flags) change.Flags {
 // See also chgv package documentation.
 type Int64 int64
 
+// Get returns the current int64 value.
 func (cv Int64) Get() int64 { return int64(cv) }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Int64) Set(v int64, chg change.Flags) change.Flags {
 	if int64(*cv) == v {
 		return 0
@@ -148,8 +166,10 @@ func (cv *Int64) Set(v int64, chg change.Flags) change.Flags {
 // See also chgv package documentation.
 type Float32 float32
 
+// Get returns the current float32 value.
 func (cv Float32) Get() float32 { return float32(cv) }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Float32) Set(v float32, chg change.Flags) change.Flags {
 	if float32(*cv) == v {
 		return 0
@@ -162,8 +182,10 @@ func (cv *Float32) Set(v float32, chg change.Flags) change.Flags {
 // See also chgv package documentation.
 type Float64 float64
 
+// Get returns the current float64 value.
 func (cv Float64) Get() float64 { return float64(cv) }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Float64) Set(v float64, chg change.Flags) change.Flags {
 	if float64(*cv) == v {
 		return 0
@@ -176,8 +198,10 @@ func (cv *Float64) Set(v float64, chg change.Flags) change.Flags {
 // See also chgv package documentation.
 type Complex64 complex64
 
+// Get returns the current complex64 value.
 func (cv Complex64) Get() complex64 { return complex64(cv) }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Complex64) Set(v complex64, chg change.Flags) change.Flags {
 	if complex64(*cv) == v {
 		return 0
@@ -190,8 +214,10 @@ func (cv *Complex64) Set(v complex64, chg change.Flags) change.Flags {
 // See also chgv package documentation.
 type Complex128 complex128
 
+// Get returns the current complex128 value.
 func (cv Complex128) Get() complex128 { return complex128(cv) }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Complex128) Set(v complex128, chg change.Flags) change.Flags {
 	if complex128(*cv) == v {
 		return 0
@@ -204,8 +230,10 @@ func (cv *Complex128) Set(v complex128, chg change.Flags) change.Flags {
 // See also chgv package documentation.
 type Byte byte
 
+// Get returns the current byte value.
 func (cv Byte) Get() byte { return byte(cv) }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Byte) Set(v byte, chg change.Flags) change.Flags {
 	if byte(*cv) == v {
 		return 0
@@ -218,8 +246,10 @@ func (cv *Byte) Set(v byte, chg change.Flags) change.Flags {
 // See also chgv package documentation.
 type Rune rune
 
+// Get returns the current rune value.
 func (cv Rune) Get() rune { return rune(cv) }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Rune) Set(v rune, chg change.Flags) change.Flags {
 	if rune(*cv) == v {
 		return 0
@@ -232,8 +262,10 @@ func (cv *Rune) Set(v rune, chg change.Flags) change.Flags {
 // See also chgv package documentation.
 type Uint uint
 
+// Get returns the current uint value.
 func (cv Uint) Get() uint { return uint(cv) }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Uint) Set(v uint, chg change.Flags) change.Flags {
 	if uint(*cv) == v {
 		return 0
@@ -246,8 +278,10 @@ func (cv *Uint) Set(v uint, chg change.Flags) change.Flags {
 // See also chgv package documentation.
 type Int int
 
+// Get returns the current int value.
 func (cv Int) Get() int { return int(cv) }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *Int) Set(v int, chg change.Flags) change.Flags {
 	if int(*cv) == v {
 		return 0
@@ -260,8 +294,10 @@ func (cv *Int) Set(v int, chg change.Flags) change.Flags {
 // See also chgv package documentation.
 type UintPtr uintptr
 
+// Get returns the current uintptr value.
 func (cv UintPtr) Get() uintptr { return uintptr(cv) }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *UintPtr) Set(v uintptr, chg change.Flags) change.Flags {
 	if uintptr(*cv) == v {
 		return 0
@@ -274,8 +310,10 @@ func (cv *UintPtr) Set(v uintptr, chg change.Flags) change.Flags {
 // See also chgv package documentation.
 type String string
 
+// Get returns the current string value.
 func (cv String) Get() string { return string(cv) }
 
+// Set the value of cv to v. See also section Set Methods.
 func (cv *String) Set(v string, chg change.Flags) change.Flags {
 	if string(*cv) == v {
 		return 0
