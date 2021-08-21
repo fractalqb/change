@@ -1,3 +1,3 @@
 module github.com/fractalqb/change
 
-go 1.16
+go 1.17
