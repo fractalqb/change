@@ -141,9 +141,9 @@ type BoolHook func(src *Bool, ov, nv bool, check bool) change.Flags
 // Reset does not call a hook, even if the value changes.
 // See also section Hook Funtions.
 func (cv *Bool) Reset(v bool, hook BoolHook) (bool, BoolHook) {
-	ov, oh := cv.v, cv.h
+	ov, oh := cv.v.Get(), cv.h
 	(*cv) = Bool{v: chgv.Bool(v), h: hook}
-	return ov.Get(), oh
+	return ov, oh
 }
 
 // Get returns the current bool value.
@@ -185,9 +185,9 @@ type Uint8Hook func(src *Uint8, ov, nv uint8, check bool) change.Flags
 // Reset does not call a hook, even if the value changes.
 // See also section Hook Funtions.
 func (cv *Uint8) Reset(v uint8, hook Uint8Hook) (uint8, Uint8Hook) {
-	ov, oh := cv.v, cv.h
+	ov, oh := cv.v.Get(), cv.h
 	(*cv) = Uint8{v: chgv.Uint8(v), h: hook}
-	return ov.Get(), oh
+	return ov, oh
 }
 
 // Get returns the current uint8 value.
@@ -229,9 +229,9 @@ type Uint16Hook func(src *Uint16, ov, nv uint16, check bool) change.Flags
 // Reset does not call a hook, even if the value changes.
 // See also section Hook Funtions.
 func (cv *Uint16) Reset(v uint16, hook Uint16Hook) (uint16, Uint16Hook) {
-	ov, oh := cv.v, cv.h
+	ov, oh := cv.v.Get(), cv.h
 	(*cv) = Uint16{v: chgv.Uint16(v), h: hook}
-	return ov.Get(), oh
+	return ov, oh
 }
 
 // Get returns the current uint16 value.
@@ -273,9 +273,9 @@ type Uint32Hook func(src *Uint32, ov, nv uint32, check bool) change.Flags
 // Reset does not call a hook, even if the value changes.
 // See also section Hook Funtions.
 func (cv *Uint32) Reset(v uint32, hook Uint32Hook) (uint32, Uint32Hook) {
-	ov, oh := cv.v, cv.h
+	ov, oh := cv.v.Get(), cv.h
 	(*cv) = Uint32{v: chgv.Uint32(v), h: hook}
-	return ov.Get(), oh
+	return ov, oh
 }
 
 // Get returns the current uint32 value.
@@ -317,9 +317,9 @@ type Uint64Hook func(src *Uint64, ov, nv uint64, check bool) change.Flags
 // Reset does not call a hook, even if the value changes.
 // See also section Hook Funtions.
 func (cv *Uint64) Reset(v uint64, hook Uint64Hook) (uint64, Uint64Hook) {
-	ov, oh := cv.v, cv.h
+	ov, oh := cv.v.Get(), cv.h
 	(*cv) = Uint64{v: chgv.Uint64(v), h: hook}
-	return ov.Get(), oh
+	return ov, oh
 }
 
 // Get returns the current uint64 value.
@@ -361,9 +361,9 @@ type Int8Hook func(src *Int8, ov, nv int8, check bool) change.Flags
 // Reset does not call a hook, even if the value changes.
 // See also section Hook Funtions.
 func (cv *Int8) Reset(v int8, hook Int8Hook) (int8, Int8Hook) {
-	ov, oh := cv.v, cv.h
+	ov, oh := cv.v.Get(), cv.h
 	(*cv) = Int8{v: chgv.Int8(v), h: hook}
-	return ov.Get(), oh
+	return ov, oh
 }
 
 // Get returns the current int8 value.
@@ -405,9 +405,9 @@ type Int16Hook func(src *Int16, ov, nv int16, check bool) change.Flags
 // Reset does not call a hook, even if the value changes.
 // See also section Hook Funtions.
 func (cv *Int16) Reset(v int16, hook Int16Hook) (int16, Int16Hook) {
-	ov, oh := cv.v, cv.h
+	ov, oh := cv.v.Get(), cv.h
 	(*cv) = Int16{v: chgv.Int16(v), h: hook}
-	return ov.Get(), oh
+	return ov, oh
 }
 
 // Get returns the current int16 value.
@@ -449,9 +449,9 @@ type Int32Hook func(src *Int32, ov, nv int32, check bool) change.Flags
 // Reset does not call a hook, even if the value changes.
 // See also section Hook Funtions.
 func (cv *Int32) Reset(v int32, hook Int32Hook) (int32, Int32Hook) {
-	ov, oh := cv.v, cv.h
+	ov, oh := cv.v.Get(), cv.h
 	(*cv) = Int32{v: chgv.Int32(v), h: hook}
-	return ov.Get(), oh
+	return ov, oh
 }
 
 // Get returns the current int32 value.
@@ -493,9 +493,9 @@ type Int64Hook func(src *Int64, ov, nv int64, check bool) change.Flags
 // Reset does not call a hook, even if the value changes.
 // See also section Hook Funtions.
 func (cv *Int64) Reset(v int64, hook Int64Hook) (int64, Int64Hook) {
-	ov, oh := cv.v, cv.h
+	ov, oh := cv.v.Get(), cv.h
 	(*cv) = Int64{v: chgv.Int64(v), h: hook}
-	return ov.Get(), oh
+	return ov, oh
 }
 
 // Get returns the current int64 value.
@@ -537,9 +537,9 @@ type Float32Hook func(src *Float32, ov, nv float32, check bool) change.Flags
 // Reset does not call a hook, even if the value changes.
 // See also section Hook Funtions.
 func (cv *Float32) Reset(v float32, hook Float32Hook) (float32, Float32Hook) {
-	ov, oh := cv.v, cv.h
+	ov, oh := cv.v.Get(), cv.h
 	(*cv) = Float32{v: chgv.Float32(v), h: hook}
-	return ov.Get(), oh
+	return ov, oh
 }
 
 // Get returns the current float32 value.
@@ -581,9 +581,9 @@ type Float64Hook func(src *Float64, ov, nv float64, check bool) change.Flags
 // Reset does not call a hook, even if the value changes.
 // See also section Hook Funtions.
 func (cv *Float64) Reset(v float64, hook Float64Hook) (float64, Float64Hook) {
-	ov, oh := cv.v, cv.h
+	ov, oh := cv.v.Get(), cv.h
 	(*cv) = Float64{v: chgv.Float64(v), h: hook}
-	return ov.Get(), oh
+	return ov, oh
 }
 
 // Get returns the current float64 value.
@@ -625,9 +625,9 @@ type Complex64Hook func(src *Complex64, ov, nv complex64, check bool) change.Fla
 // Reset does not call a hook, even if the value changes.
 // See also section Hook Funtions.
 func (cv *Complex64) Reset(v complex64, hook Complex64Hook) (complex64, Complex64Hook) {
-	ov, oh := cv.v, cv.h
+	ov, oh := cv.v.Get(), cv.h
 	(*cv) = Complex64{v: chgv.Complex64(v), h: hook}
-	return ov.Get(), oh
+	return ov, oh
 }
 
 // Get returns the current complex64 value.
@@ -669,9 +669,9 @@ type Complex128Hook func(src *Complex128, ov, nv complex128, check bool) change.
 // Reset does not call a hook, even if the value changes.
 // See also section Hook Funtions.
 func (cv *Complex128) Reset(v complex128, hook Complex128Hook) (complex128, Complex128Hook) {
-	ov, oh := cv.v, cv.h
+	ov, oh := cv.v.Get(), cv.h
 	(*cv) = Complex128{v: chgv.Complex128(v), h: hook}
-	return ov.Get(), oh
+	return ov, oh
 }
 
 // Get returns the current complex128 value.
@@ -713,9 +713,9 @@ type ByteHook func(src *Byte, ov, nv byte, check bool) change.Flags
 // Reset does not call a hook, even if the value changes.
 // See also section Hook Funtions.
 func (cv *Byte) Reset(v byte, hook ByteHook) (byte, ByteHook) {
-	ov, oh := cv.v, cv.h
+	ov, oh := cv.v.Get(), cv.h
 	(*cv) = Byte{v: chgv.Byte(v), h: hook}
-	return ov.Get(), oh
+	return ov, oh
 }
 
 // Get returns the current byte value.
@@ -757,9 +757,9 @@ type RuneHook func(src *Rune, ov, nv rune, check bool) change.Flags
 // Reset does not call a hook, even if the value changes.
 // See also section Hook Funtions.
 func (cv *Rune) Reset(v rune, hook RuneHook) (rune, RuneHook) {
-	ov, oh := cv.v, cv.h
+	ov, oh := cv.v.Get(), cv.h
 	(*cv) = Rune{v: chgv.Rune(v), h: hook}
-	return ov.Get(), oh
+	return ov, oh
 }
 
 // Get returns the current rune value.
@@ -801,9 +801,9 @@ type UintHook func(src *Uint, ov, nv uint, check bool) change.Flags
 // Reset does not call a hook, even if the value changes.
 // See also section Hook Funtions.
 func (cv *Uint) Reset(v uint, hook UintHook) (uint, UintHook) {
-	ov, oh := cv.v, cv.h
+	ov, oh := cv.v.Get(), cv.h
 	(*cv) = Uint{v: chgv.Uint(v), h: hook}
-	return ov.Get(), oh
+	return ov, oh
 }
 
 // Get returns the current uint value.
@@ -845,9 +845,9 @@ type IntHook func(src *Int, ov, nv int, check bool) change.Flags
 // Reset does not call a hook, even if the value changes.
 // See also section Hook Funtions.
 func (cv *Int) Reset(v int, hook IntHook) (int, IntHook) {
-	ov, oh := cv.v, cv.h
+	ov, oh := cv.v.Get(), cv.h
 	(*cv) = Int{v: chgv.Int(v), h: hook}
-	return ov.Get(), oh
+	return ov, oh
 }
 
 // Get returns the current int value.
@@ -889,9 +889,9 @@ type UintPtrHook func(src *UintPtr, ov, nv uintptr, check bool) change.Flags
 // Reset does not call a hook, even if the value changes.
 // See also section Hook Funtions.
 func (cv *UintPtr) Reset(v uintptr, hook UintPtrHook) (uintptr, UintPtrHook) {
-	ov, oh := cv.v, cv.h
+	ov, oh := cv.v.Get(), cv.h
 	(*cv) = UintPtr{v: chgv.UintPtr(v), h: hook}
-	return ov.Get(), oh
+	return ov, oh
 }
 
 // Get returns the current uintptr value.
@@ -933,9 +933,9 @@ type StringHook func(src *String, ov, nv string, check bool) change.Flags
 // Reset does not call a hook, even if the value changes.
 // See also section Hook Funtions.
 func (cv *String) Reset(v string, hook StringHook) (string, StringHook) {
-	ov, oh := cv.v, cv.h
+	ov, oh := cv.v.Get(), cv.h
 	(*cv) = String{v: chgv.String(v), h: hook}
-	return ov.Get(), oh
+	return ov, oh
 }
 
 // Get returns the current string value.

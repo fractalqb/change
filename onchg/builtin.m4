@@ -22,9 +22,9 @@ type $2Hook func(src *$2, ov, nv $1, check bool) change.Flags
 // Reset does not call a hook, even if the value changes.
 // See also section Hook Funtions.
 func (cv *$2) Reset(v $1, hook $2Hook) ($1, $2Hook) {
-	ov, oh := cv.v, cv.h
+	ov, oh := cv.v.Get(), cv.h
 	(*cv) = $2{v: chgv.$2(v), h: hook}
-	return ov.Get(), oh
+	return ov, oh
 }
 
 // Get returns the current $1 value.

@@ -71,63 +71,97 @@ func ObserveFields(obj Observable, prio int, reflectedFieldTag bool, flags chang
 	if val.Kind() != reflect.Struct {
 		return fmt.Errorf("Cannot observe fields of non-struct type %T", obj)
 	}
+	type oblfield struct {
+		sf reflect.StructField
+		o  Observable
+	}
+	var oblfields []oblfield
+	eachOblField(val, func(sf reflect.StructField, o Observable) {
+		oblfields = append(oblfields, oblfield{sf, o})
+	})
+	stubs := make([]stub, len(oblfields))
 	setFlags := flags != 0
-	typ := val.Type()
-	obsBaseType := reflect.TypeOf(ObservableBase{})
-	for i := 0; i < val.NumField(); i++ {
-		fv := val.Field(i)
-		if fv.Type() == obsBaseType {
+	for fi, of := range oblfields {
+		if of.sf.Anonymous && of.sf.Type.Kind() == reflect.Struct {
+			err := ObserveFields(of.o, prio, reflectedFieldTag, flags)
+			if err != nil {
+				return err
+			}
+		}
+		field := of.sf.Name
+		var (
+			defaultTag  interface{}
+			defaultFlag change.Flags
+		)
+		if tag, ok := of.sf.Tag.Lookup("obsv"); ok {
+			if tag == "-" {
+				continue
+			}
+			var err error
+			field, defaultTag, defaultFlag, err = paseFieldTag(field, tag)
+			if err != nil {
+				return fmt.Errorf("Tag on field '%s' in %T: %w",
+					of.sf.Name,
+					obj,
+					err)
+			}
+			if flags&defaultFlag != defaultFlag {
+				return fmt.Errorf("Flag 0x%x not available for field '%s' in %T",
+					defaultFlag,
+					of.sf.Name,
+					obj)
+			}
+		}
+		var regTag interface{}
+		if reflectedFieldTag {
+			regTag = of.sf
+		}
+		of.o.register(prio, regTag, fieldUpdate{
+			object: obj,
+			field:  field,
+		}, &stubs[fi])
+		if setFlags && defaultFlag == 0 {
+			if flags == 0 {
+				return fmt.Errorf("No flags left for field '%s'", of.sf.Name)
+			}
+			defaultFlag, flags = pickFlag(flags)
+		} else {
+			flags &= ^defaultFlag
+		}
+		of.o.SetObsDefaults(defaultTag, defaultFlag)
+	}
+	return nil
+}
+
+var oblBaseType = reflect.TypeOf(ObservableBase{})
+
+func eachOblField(obj reflect.Value, do func(reflect.StructField, Observable)) {
+	typ := obj.Type()
+	for i := 0; i < obj.NumField(); i++ {
+		fv := obj.Field(i)
+		ft := fv.Type()
+		sf := typ.Field(i)
+		if ft == oblBaseType || !sf.IsExported() {
 			continue
 		}
-		if fv.Kind() != reflect.Ptr {
-			fv = fv.Addr()
+		if fobs := isObservable(fv); fobs != nil {
+			do(sf, fobs)
+		} else if sf.Anonymous && ft.Kind() == reflect.Struct {
+			eachOblField(fv, do)
 		}
-		if fobs, ok := fv.Interface().(Observable); ok {
-			sf := typ.Field(i)
-			field := sf.Name
-			var (
-				defaultTag  interface{}
-				defaultFlag change.Flags
-			)
-			if tag, ok := sf.Tag.Lookup("obsv"); ok {
-				if tag == "-" {
-					continue
-				}
-				var err error
-				field, defaultTag, defaultFlag, err = paseFieldTag(field, tag)
-				if err != nil {
-					return fmt.Errorf("Tag on field '%s' in %T: %w",
-						sf.Name,
-						obj,
-						err)
-				}
-				if flags&defaultFlag != defaultFlag {
-					return fmt.Errorf("Flag 0x%x not available for field '%s' in %T",
-						defaultFlag,
-						sf.Name,
-						obj)
-				}
-			}
-			var regTag interface{}
-			if reflectedFieldTag {
-				regTag = sf
-			}
-			fobs.ObsRegister(prio, regTag, fieldUpdate{
-				object: obj,
-				field:  field,
-			})
-			if setFlags && defaultFlag == 0 {
-				if flags == 0 {
-					return fmt.Errorf("No flags left for field %d '%s'",
-						i,
-						sf.Name)
-				}
-				defaultFlag, flags = pickFlag(flags)
-			} else {
-				flags &= ^defaultFlag
-			}
-			fobs.SetObsDefaults(defaultTag, defaultFlag)
-		}
+	}
+}
+
+func isObservable(v reflect.Value) Observable {
+	if o, ok := v.Interface().(Observable); ok {
+		return o
+	}
+	if v.Kind() == reflect.Ptr {
+		return nil
+	}
+	v = v.Addr()
+	if o, ok := v.Interface().(Observable); ok {
+		return o
 	}
 	return nil
 }

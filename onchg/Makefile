@@ -1,6 +1,6 @@
 .PRECIOUS: %.go-m4
 
-all: builtin.go
+all: builtin.go multihook.go
 
 %.go: %.go-m4 %.go-m4~
 	diff3 -m $@ $*.go-m4 $*.go-m4~ > $@~

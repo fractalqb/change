@@ -73,6 +73,8 @@ type Observable interface {
 	// ObsLastVeto returns the Veto from the last Set call, if any.
 	ObsLastVeto() *Veto
 	ObsEach(do func(tag interface{}, o Observer))
+
+	register(prio int, tag interface{}, o Observer, s *stub)
 }
 
 type Event interface {
@@ -158,6 +160,11 @@ func (b ObservableBase) ObsDefaults() (tag interface{}, chg change.Flags) {
 }
 
 func (b *ObservableBase) SetObsDefaults(tag interface{}, chg change.Flags) {
+	b.setDefaults(tag, chg, nil)
+}
+
+func (b *ObservableBase) setDefaults(tag interface{}, chg change.Flags, s *stub) {
+	b.replaceStub(s)
 	if b.stub == nil {
 		b.stub = &stub{
 			chg: chg,
@@ -170,9 +177,14 @@ func (b *ObservableBase) SetObsDefaults(tag interface{}, chg change.Flags) {
 }
 
 func (b *ObservableBase) ObsRegister(prio int, tag interface{}, o Observer) {
+	b.register(prio, tag, o, nil)
+}
+
+func (b *ObservableBase) register(prio int, tag interface{}, o Observer, s *stub) {
 	if o == nil {
 		return
 	}
+	b.replaceStub(s)
 	if b.stub == nil {
 		b.stub = new(stub)
 	}
@@ -216,5 +228,16 @@ func (b *ObservableBase) ObsEach(do func(tag interface{}, o Observer)) {
 	}
 	for _, oln := range b.stub.obsls {
 		do(oln.tag, oln.obs)
+	}
+}
+
+func (b *ObservableBase) replaceStub(s *stub) {
+	if s != nil {
+		if b.stub != nil {
+			*s = *b.stub
+		} else {
+			*s = stub{}
+		}
+		b.stub = s
 	}
 }

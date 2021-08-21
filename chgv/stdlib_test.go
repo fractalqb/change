@@ -16,9 +16,100 @@
 
 package chgv
 
-import "github.com/fractalqb/change"
+import (
+	"testing"
+	"time"
+
+	"github.com/fractalqb/change"
+)
 
 var (
 	_ change.Time     = (*Time)(nil)
 	_ change.Duration = (*Duration)(nil)
 )
+
+func TestTime(t *testing.T) {
+	t.Run("String", func(t *testing.T) {
+		raw := time.Now()
+		cv := Time(raw)
+		if rs, cs := raw.String(), cv.String(); rs != cs {
+			t.Errorf("%s != %s", rs, cs)
+		}
+	})
+	t.Run("zero value", func(t *testing.T) {
+		var cv Time
+		if !cv.Get().IsZero() {
+			t.Error("Int does not initialize to zero value")
+		}
+	})
+	now := time.Now()
+	t.Run("init", func(t *testing.T) {
+		cv := Time(now)
+		if v := cv.Get(); !v.Equal(now) {
+			t.Errorf("Int initialization failed. Got %v want %v", v, now)
+		}
+	})
+	t.Run("unchanged set", func(t *testing.T) {
+		cv := Time(now)
+		chg := cv.Set(now, 1)
+		if v := cv.Get(); !v.Equal(now) {
+			t.Errorf("Got unexpeted value %v, want %v", v, now)
+		}
+		if chg != 0 {
+			t.Errorf("Unexpected change flags 0x%x, want 0", chg)
+		}
+	})
+	t.Run("changing set", func(t *testing.T) {
+		cv := Time(now)
+		later := now.Add(time.Minute)
+		chg := cv.Set(later, 1)
+		if v := cv.Get(); !v.Equal(later) {
+			t.Errorf("Got unexpeted value %v, want %v", v, later)
+		}
+		if chg != 1 {
+			t.Errorf("Unexpected change flags 0x%x, want 1", chg)
+		}
+	})
+}
+
+func TestDuration(t *testing.T) {
+	t.Run("String", func(t *testing.T) {
+		raw := 3 * time.Minute
+		cv := Duration(raw)
+		if rs, cs := raw.String(), cv.String(); rs != cs {
+			t.Errorf("%s != %s", rs, cs)
+		}
+	})
+	t.Run("zero value", func(t *testing.T) {
+		var cv Duration
+		if cv != 0 {
+			t.Error("Int does not initialize to zero value")
+		}
+	})
+	t.Run("init", func(t *testing.T) {
+		cv := Duration(time.Second)
+		if v := cv.Get(); v != time.Second {
+			t.Errorf("Int initialization failed. Got %v want 1s", v)
+		}
+	})
+	t.Run("unchanged set", func(t *testing.T) {
+		cv := Duration(time.Second)
+		chg := cv.Set(time.Second, 1)
+		if v := cv.Get(); v != time.Second {
+			t.Errorf("Got unexpeted value %v, want 1s", v)
+		}
+		if chg != 0 {
+			t.Errorf("Unexpected change flags 0x%x, want 0", chg)
+		}
+	})
+	t.Run("changing set", func(t *testing.T) {
+		cv := Duration(time.Second)
+		chg := cv.Set(2*time.Second, 1)
+		if v := cv.Get(); v != 2*time.Second {
+			t.Errorf("Got unexpeted value %v, want 2s", v)
+		}
+		if chg != 1 {
+			t.Errorf("Unexpected change flags 0x%x, want 1", chg)
+		}
+	})
+}
