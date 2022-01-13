@@ -6,29 +6,34 @@
 // published by the Free Software Foundation, either version 3 of the
 // License, or (at your option) any later version.
 //
-// change is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// change is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
 // along with change.  If not, see <http://www.gnu.org/licenses/>.
 
-package chgv
+package change
 
 import "fmt"
 
-func Example() {
+func ExampleOnChg() {
 	user := struct {
-		Name   String
-		Logins Int
+		Name   OnChg[string]
+		Logins OnChg[int]
 	}{
-		Name:   "John Doe",
-		Logins: 0,
+		Name: *NewOnChg[string]("John Doe", FlagHook[string](1).Flag),
+		Logins: *NewOnChg[int](0, func(_ *OnChg[int], o, n int, check bool) Flags {
+			if !check {
+				fmt.Printf("changed logins from %d to %d\n", o, n)
+			}
+			return 2
+		}),
 	}
 
-	chg := user.Name.Set("John Doe", 1) // = (1<<0) = 0b01
-	chg |= user.Logins.Set(1, 2)        // = (1<<1) = 0b10
+	chg := user.Name.Set("John Doe", 0)
+	chg |= user.Logins.Set(1, 0)
 
 	fmt.Printf("Changes: 0b%b\n", chg)
 	if chg&1 == 0 {
@@ -37,6 +42,7 @@ func Example() {
 		fmt.Println("Name changed")
 	}
 	// Output:
+	// changed logins from 0 to 1
 	// Changes: 0b10
 	// Name did not change
 }
