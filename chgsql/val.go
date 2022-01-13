@@ -14,11 +14,25 @@
 // You should have received a copy of the GNU General Public License
 // along with change.  If not, see <http://www.gnu.org/licenses/>.
 
-// Package change has three different concepts that help to track
-// changes of values in an application. The concepts are implemente as
-// generics and follow different trade offs between resource consumption,
-// i.e. memory and time, against features richness.
-//
-// Compare the following example with the examples from the sub
-// packages:
-package change
+package chgsql
+
+import "github.com/fractalqb/change"
+
+type ValScanner[T comparable] struct {
+	V *change.Val[T]
+	Chg change.Flags
+	Null T
+}
+
+func (v ValScanner[T]) Scan(src interface{}) error {
+	if src == nil {
+		v.Chg = v.V.Set(v.Null, v.Chg)
+		return nil
+	}
+	pv, err := promoteSqlTo[T](src)
+	if err != nil {
+		return err
+	}
+	v.Chg = v.V.Set(pv, v.Chg)
+	return nil
+}

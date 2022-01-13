@@ -14,11 +14,32 @@
 // You should have received a copy of the GNU General Public License
 // along with change.  If not, see <http://www.gnu.org/licenses/>.
 
-// Package change has three different concepts that help to track
-// changes of values in an application. The concepts are implemente as
-// generics and follow different trade offs between resource consumption,
-// i.e. memory and time, against features richness.
-//
-// Compare the following example with the examples from the sub
-// packages:
-package change
+package chgsql
+
+import (
+	"fmt"
+	"reflect"
+	
+	"github.com/fractalqb/change"
+)
+
+func Nullable[T comparable](v change.Changeable[T], null T) interface{} {
+	db := v.Get()
+	if db == null {
+		return nil
+	}
+	return db
+}
+
+func promoteSqlTo[T any](from any) (p T, err error) {
+	if p, ok := from.(T); ok {
+		return p, nil
+	}
+	fromVal := reflect.ValueOf(from)
+	pType := reflect.TypeOf(p)
+	if !fromVal.CanConvert(pType) {
+		return p, fmt.Errorf("cannot promote SQL %T to %T", from, p)
+	}
+	p = fromVal.Convert(pType).Interface().(T)
+	return p, nil
+}
