@@ -20,7 +20,7 @@ import "fmt"
 
 var _ Changeable[int] = (*Obs[int])(nil)
 
-func ExampleObsString() {
+func ExampleObs_string() {
 	str := NewObs("", "example string", 4711)
 	str.ObsRegister(0, nil, &UpdateFunc{func(tag interface{}, e Event) {
 		chg := e.(Changed[string])
@@ -38,7 +38,7 @@ func ExampleObsString() {
 }
 
 func ExampleObs_ObsRegister() {
-	obs := NewObs[string]("", nil, 0)
+	obs := NewObs("", nil, 0)
 	updFunc := func(tag interface{}, _ Event) { fmt.Println(tag) }
 	obs.ObsRegister(0, "A", &UpdateFunc{updFunc})
 	obs.ObsRegister(1, "B", &UpdateFunc{updFunc})
