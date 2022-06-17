@@ -19,7 +19,7 @@ package chgsql
 import (
 	"fmt"
 	"reflect"
-	
+
 	"github.com/fractalqb/change"
 )
 

@@ -16,9 +16,9 @@
 
 package change
 
-// Val implements values that track changes with a simple flag-set of
-// type Flags. The flag(s) passed to any Set method call are retuned
-// if the underlying value changed. Otherwise the passed value is not
+// Val is a Changeable that tracks changes with a simple set of Flags.
+// The flag(s) passed to a Set method call are returned if the
+// underlying value changed. Otherwise the passed value is not
 // assigned and 0 is returned. Note that if one passes flag=0 to Set
 // the returned value will always be 0, which makes it rather
 // uninteresting. However this will not affect the actual value

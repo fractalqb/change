@@ -14,11 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with change.  If not, see <http://www.gnu.org/licenses/>.
 
-// Package change has three different concepts that help to track
-// changes of values in an application. The concepts are implemente as
-// generics and follow different trade offs between resource consumption,
-// i.e. memory and time, against features richness.
+// Package change helps to keep track of changed values in Go
+// programs. It has three different concepts to do so that vary in
+// memory overhead, time overhead and features: The simple Val, the Do
+// with a single callback hook and the full-featured observable Obs.
+// All implement a common interface Changeable and are implemented as
+// generics.
 //
-// Compare the following example with the examples from the sub
-// packages:
+// Compare the following plain-Go example with the examples from Val,
+// On and Obs:
 package change

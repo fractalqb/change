@@ -20,12 +20,13 @@ import (
 	"sort"
 )
 
-// Observable objects will notify registered Observers about state changes.
-// Observables use tags to let Observers easily distinguish the different
-// subject they might observe. In addition to change Events, Observables also
-// use change Flags to descibe chages – much like Val and On values.
-// Observers are notified in order of their registered priority, highest first.
-// Observers with the same priority are notified in order of their registration.
+// Observable objects will notify registered Observers about state
+// changes.  Observables use tags to let Observers easily distinguish
+// the different subject they observe. In addition to change Events,
+// Observables also use change Flags to descibe chages – much like Val
+// and On values.  Observers are notified in order of their registered
+// priority, highest first.  Observers with the same priority are
+// notified in order of their registration.
 type Observable interface {
 	// ObsDefaults returns the default tag and change Flags of the observable.
 	ObsDefaults() (tag interface{}, chg Flags)
@@ -225,7 +226,7 @@ func (b *ObservableBase) replaceStub(s *stub) {
 	}
 }
 
-// Obs implements Observable for all comparable types T.
+// Obs implements Changeable as a full featured Observable.
 type Obs[T comparable] struct {
 	v Val[T]
 	ObservableBase

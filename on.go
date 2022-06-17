@@ -16,7 +16,7 @@
 
 package change
 
-// On implements values with a hook that is called on value
+// On implements Changeable with a hook that is called on value
 // changes.  When the Set method is called, first the hook is called
 // before a change is made with check=true. With check==true the hook
 // decides if it blocks the set operation. To block the set operation,
@@ -31,15 +31,15 @@ type On[T comparable] struct {
 
 // HookFunc functions can be hooked into On values. They get passed
 // the On object src for which the Set method was called, the old
-// value ov and the to be set value nv and the check flag. See also
-// the On description.
-type HookFunc[T comparable] func(src *On[T], ov, nv T, check bool) Flags
+// value odlval and the to be set value newval and the check flag. See
+// also the description of On.
+type HookFunc[T comparable] func(src *On[T], oldval, newval T, check bool) Flags
 
 // FlagHook's Flag method always returns the same Flags value.
 type FlagHook[_ comparable] Flags
 
 // Flag is a HookFunc for On values.
-func (h FlagHook[T]) Func(_ *On[T], _, _ T, _ bool) Flags {
+func (h FlagHook[T]) Func(src *On[T], oldval, newval T, check bool) Flags {
 	return Flags(h)
 }
 
