@@ -232,9 +232,12 @@ type Obs[T comparable] struct {
 	ObservableBase
 }
 
-func NewObs[T comparable](init T, defaultTag interface{}, defaultChg Flags) Obs[T] {
+func NewObs[T comparable](init T, defaultTag interface{}, defaultChg Flags, os ...Observer) Obs[T] {
 	res := Obs[T]{v: Val[T]{init}}
 	res.SetObsDefaults(defaultTag, defaultChg)
+	for _, o := range os {
+		res.ObsRegister(0, nil, o)
+	}
 	return res
 }
 

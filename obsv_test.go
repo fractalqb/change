@@ -16,7 +16,10 @@
 
 package change
 
-import "fmt"
+import (
+	"fmt"
+	"testing"
+)
 
 var _ Changeable[int] = (*Obs[int])(nil)
 
@@ -50,4 +53,15 @@ func ExampleObs_ObsRegister() {
 	// B
 	// C
 	// A
+}
+
+func TestObs_NewObs_withObserver(t *testing.T) {
+	count := 0
+	obs := NewObs("", nil, 1, &UpdateFunc{func(any, Event) {
+		count++
+	}})
+	obs.Set("foo", 1)
+	if count != 1 {
+		t.Errorf("change event observed %d times", count)
+	}
 }
