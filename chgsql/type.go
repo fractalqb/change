@@ -18,12 +18,13 @@ package chgsql
 
 import (
 	"fmt"
+	"math"
 	"reflect"
 
 	"github.com/fractalqb/change"
 )
 
-func Nullable[T comparable](v change.Changeable[T], null T) interface{} {
+func Nullable[T comparable](v change.Changeable[T], null T) any {
 	db := v.Get()
 	if db == null {
 		return nil
@@ -43,3 +44,21 @@ func promoteSqlTo[T any](from any) (p T, err error) {
 	p = fromVal.Convert(pType).Interface().(T)
 	return p, nil
 }
+
+func NullableF32(v change.Changeable[float32]) any {
+	f := v.Get()
+	if math.IsNaN(float64(f)) {
+		return nil
+	}
+	return f
+}
+
+func NullableF64(v change.Changeable[float64]) any {
+	f := v.Get()
+	if math.IsNaN(f) {
+		return nil
+	}
+	return f
+}
+
+var nan32 = float32(math.NaN())

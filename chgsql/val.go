@@ -16,15 +16,20 @@
 
 package chgsql
 
-import "github.com/fractalqb/change"
+import (
+	"fmt"
+	"math"
+
+	"github.com/fractalqb/change"
+)
 
 type ValScanner[T comparable] struct {
-	V *change.Val[T]
-	Chg change.Flags
+	V    *change.Val[T]
 	Null T
+	Chg  change.Flags
 }
 
-func (v ValScanner[T]) Scan(src interface{}) error {
+func (v *ValScanner[T]) Scan(src any) error {
 	if src == nil {
 		v.Chg = v.V.Set(v.Null, v.Chg)
 		return nil
@@ -34,5 +39,47 @@ func (v ValScanner[T]) Scan(src interface{}) error {
 		return err
 	}
 	v.Chg = v.V.Set(pv, v.Chg)
+	return nil
+}
+
+type ValScanF32 struct {
+	V   *change.Val[float32]
+	Chg change.Flags
+}
+
+func (v *ValScanF32) Scan(src any) error {
+	if src == nil {
+		v.Chg = v.V.Set(nan32, v.Chg)
+		return nil
+	}
+	switch src := src.(type) {
+	case float64:
+		v.Chg = v.V.Set(float32(src), v.Chg)
+	case float32:
+		v.Chg = v.V.Set(src, v.Chg)
+	default:
+		return fmt.Errorf("cannot promote SQL %T to float32", src)
+	}
+	return nil
+}
+
+type ValScanF64 struct {
+	V   *change.Val[float64]
+	Chg change.Flags
+}
+
+func (v *ValScanF64) Scan(src any) error {
+	if src == nil {
+		v.Chg = v.V.Set(math.NaN(), v.Chg)
+		return nil
+	}
+	switch src := src.(type) {
+	case float64:
+		v.Chg = v.V.Set(src, v.Chg)
+	case float32:
+		v.Chg = v.V.Set(float64(src), v.Chg)
+	default:
+		return fmt.Errorf("cannot promote SQL %T to float64", src)
+	}
 	return nil
 }
