@@ -25,14 +25,14 @@ var _ Changeable[int] = (*Obs[int])(nil)
 
 func ExampleObs_string() {
 	str := NewObs("", "example string", 4711)
-	str.ObsRegister(0, nil, &UpdateFunc{func(tag interface{}, e Event) {
+	str.ObsRegister(0, nil, UpdateFunc(func(tag any, e Event) {
 		chg := e.(Changed[string])
 		fmt.Printf("Tag: %+v\n", tag)
 		fmt.Printf("Event: '%s'→'%s': %d\n",
 			chg.OldValue(),
 			chg.NewValue(),
 			e.Chg())
-	}})
+	}))
 	fmt.Println(str.Set("Observe this change!", 0), str.ObsLastVeto())
 	// Output:
 	// Tag: example string
@@ -42,11 +42,11 @@ func ExampleObs_string() {
 
 func ExampleObs_ObsRegister() {
 	obs := NewObs("", nil, 0)
-	updFunc := func(tag interface{}, _ Event) { fmt.Println(tag) }
-	obs.ObsRegister(0, "A", &UpdateFunc{updFunc})
-	obs.ObsRegister(1, "B", &UpdateFunc{updFunc})
-	obs.ObsRegister(1, "C", &UpdateFunc{updFunc})
-	obs.ObsRegister(2, "D", &UpdateFunc{updFunc})
+	updFunc := func(tag any, _ Event) { fmt.Println(tag) }
+	obs.ObsRegister(0, "A", UpdateFunc(updFunc))
+	obs.ObsRegister(1, "B", UpdateFunc(updFunc))
+	obs.ObsRegister(1, "C", UpdateFunc(updFunc))
+	obs.ObsRegister(2, "D", UpdateFunc(updFunc))
 	obs.Set("foo", 0)
 	// Output:
 	// D
@@ -57,9 +57,9 @@ func ExampleObs_ObsRegister() {
 
 func TestObs_NewObs_withObserver(t *testing.T) {
 	count := 0
-	obs := NewObs("", nil, 1, &UpdateFunc{func(any, Event) {
+	obs := NewObs("", nil, 1, UpdateFunc(func(any, Event) {
 		count++
-	}})
+	}))
 	obs.Set("foo", 1)
 	if count != 1 {
 		t.Errorf("change event observed %d times", count)

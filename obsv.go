@@ -29,13 +29,13 @@ import (
 // notified in order of their registration.
 type Observable interface {
 	// ObsDefaults returns the default tag and change Flags of the observable.
-	ObsDefaults() (tag interface{}, chg Flags)
+	ObsDefaults() (tag any, chg Flags)
 	// SetObsDefaults sets the default tag and change Flags of the observable.
-	SetObsDefaults(tag interface{}, chg Flags)
+	SetObsDefaults(tag any, chg Flags)
 	// ObsRegister registres a new Observer with this Observable. If tag is not
 	// nil, the Observer will be notified with this specific tag, not the
 	// default tag.
-	ObsRegister(prio int, tag interface{}, o Observer)
+	ObsRegister(prio int, tag any, o Observer)
 	// ObsUnregister removes the Observer o from the observable if it is
 	// registered. Otherwise ObsUnregister odes nothing.
 	ObsUnregister(o Observer)
@@ -43,7 +43,7 @@ type Observable interface {
 	ObsLastVeto() *Veto
 	// ObsEach calls do for all registered Observers in noitification order
 	// with the same tag that would be used for notifications.
-	ObsEach(do func(tag interface{}, o Observer))
+	ObsEach(do func(tag any, o Observer))
 }
 
 // Observers can be registered with Observables to be notified about state
@@ -55,29 +55,27 @@ type Observer interface {
 	// observer can block the change.  Check also can override the
 	// default change Flags used for the Set operation by returning
 	// chg != 0.
-	Check(tag interface{}, e Event) *Veto
+	Check(tag any, e Event) *Veto
 	// Update notifies the observer about a change Event e.
-	Update(tag interface{}, e Event)
+	Update(tag any, e Event)
 }
 
 // Use UpdateFunc to wrap an update function so that it can be used as
 // an Observer. Note that the pointer to the UpdateFunc object will be
 // used to implement equality. This is because Go functions are not
 // comparable.
-type UpdateFunc struct {
-	F func(tag interface{}, e Event)
+func UpdateFunc(f func(any, Event)) Observer { return &updFunc{f} }
+
+type updFunc struct {
+	f func(tag any, e Event)
 }
 
 // Check will never block a change and always retuns 0 Flags, i.e. does not
 // override default change Falgs.
-func (UpdateFunc) Check(interface{}, Event) *Veto {
-	return nil
-}
+func (*updFunc) Check(any, Event) *Veto { return nil }
 
 // Upate call the update function F.
-func (uf *UpdateFunc) Update(tag interface{}, e Event) {
-	uf.F(tag, e)
-}
+func (uf *updFunc) Update(tag any, e Event) { uf.f(tag, e) }
 
 // Event is the base interface for all state change events.
 type Event interface {
@@ -99,9 +97,9 @@ func (e eventBase) Chg() Flags { return e.chg }
 type ValueChange interface {
 	Event
 	// OldValue returns the value befor the change.
-	OldValue() interface{}
+	OldValue() any
 	// NewValue returns the current value, i.e. after the change.
-	NewValue() interface{}
+	NewValue() any
 }
 
 type Changed[T comparable] struct {
@@ -110,10 +108,10 @@ type Changed[T comparable] struct {
 }
 
 // Implement ValueChange
-func (ce Changed[T]) OldValue() interface{} { return ce.ov }
+func (ce Changed[T]) OldValue() any { return ce.ov }
 
 // Implement ValueChange
-func (ce Changed[T]) NewValue() interface{} { return ce.nv }
+func (ce Changed[T]) NewValue() any { return ce.nv }
 
 // Veto keeps the information why a Set operation was stopped by which
 // Obersver.  The Veto can be requested from each Observable until the
@@ -136,18 +134,18 @@ type ObservableBase struct {
 	stub *stub
 }
 
-func (b ObservableBase) ObsDefaults() (tag interface{}, chg Flags) {
+func (b ObservableBase) ObsDefaults() (tag any, chg Flags) {
 	if b.stub == nil {
 		return nil, 0
 	}
 	return b.stub.tag, b.stub.chg
 }
 
-func (b *ObservableBase) SetObsDefaults(tag interface{}, chg Flags) {
+func (b *ObservableBase) SetObsDefaults(tag any, chg Flags) {
 	b.setDefaults(tag, chg, nil)
 }
 
-func (b *ObservableBase) setDefaults(tag interface{}, chg Flags, s *stub) {
+func (b *ObservableBase) setDefaults(tag any, chg Flags, s *stub) {
 	b.replaceStub(s)
 	if b.stub == nil {
 		b.stub = &stub{
@@ -160,11 +158,11 @@ func (b *ObservableBase) setDefaults(tag interface{}, chg Flags, s *stub) {
 	}
 }
 
-func (b *ObservableBase) ObsRegister(prio int, tag interface{}, o Observer) {
+func (b *ObservableBase) ObsRegister(prio int, tag any, o Observer) {
 	b.register(prio, tag, o, nil)
 }
 
-func (b *ObservableBase) register(prio int, tag interface{}, o Observer, s *stub) {
+func (b *ObservableBase) register(prio int, tag any, o Observer, s *stub) {
 	if o == nil {
 		return
 	}
@@ -206,7 +204,7 @@ func (b *ObservableBase) ObsLastVeto() *Veto {
 	return b.stub.veto
 }
 
-func (b *ObservableBase) ObsEach(do func(tag interface{}, o Observer)) {
+func (b *ObservableBase) ObsEach(do func(tag any, o Observer)) {
 	if b.stub == nil {
 		return
 	}
@@ -232,7 +230,7 @@ type Obs[T comparable] struct {
 	ObservableBase
 }
 
-func NewObs[T comparable](init T, defaultTag interface{}, defaultChg Flags, os ...Observer) Obs[T] {
+func NewObs[T comparable](init T, defaultTag any, defaultChg Flags, os ...Observer) Obs[T] {
 	res := Obs[T]{v: Val[T]{init}}
 	res.SetObsDefaults(defaultTag, defaultChg)
 	for _, o := range os {
@@ -268,7 +266,7 @@ func (ov *Obs[T]) Set(v T, chg Flags) Flags {
 }
 
 type stub struct {
-	tag   interface{}
+	tag   any
 	chg   Flags
 	obsls []obsLink // prio high → low
 	veto  *Veto
@@ -283,7 +281,7 @@ func (s *stub) change(chg Flags) Flags {
 
 func (s *stub) check(e Event) *Veto {
 	for _, oln := range s.obsls {
-		var tag interface{}
+		var tag any
 		if oln.tag != nil {
 			tag = oln.tag
 		} else {
@@ -309,6 +307,6 @@ func (s *stub) update(e Event) {
 
 type obsLink struct {
 	prio int
-	tag  interface{}
+	tag  any
 	obs  Observer
 }
