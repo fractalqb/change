@@ -21,8 +21,6 @@ import (
 	"testing"
 )
 
-var _ Changeable[int] = (*Obs[int])(nil)
-
 func ExampleObs_string() {
 	str := NewObs("", "example string", 4711)
 	str.ObsRegister(0, nil, UpdateFunc(func(tag any, e Event) {

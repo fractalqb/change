@@ -16,23 +16,23 @@
 
 package change
 
-// On implements Changeable with a hook that is called on value
-// changes.  When the Set method is called, first the hook is called
-// before a change is made with check=true. With check==true the hook
-// decides if it blocks the set operation. To block the set operation,
-// the hook returns 0. Otherwise the hook provides the change flags
-// for the Set method. The flags from the hook are overridden if
-// non-zero flags are passed to the value's Set method. If the hook is
-// nil, On behave exactly like Val.
+// On implements [Changeable] with a hook that is called on value changes.  When
+// [On.Set] is called, first the hook is called before a change is made with
+// check=true. With check==true the hook decides if it blocks the set operation.
+// To block the set operation, the hook returns 0. Otherwise the hook provides
+// the change flags for the Set method. The flags from the hook are overridden
+// if non-zero flags are passed to the value's Set method. If the hook is nil,
+// On behave exactly like [Val].
 type On[T comparable] struct {
 	v Val[T]
 	h HookFunc[T]
 }
 
-// HookFunc functions can be hooked into On values. They get passed
-// the On object src for which the Set method was called, the old
-// value odlval and the to be set value newval and the check flag. See
-// also the description of On.
+var _ Changeable[int] = (*On[int])(nil)
+
+// HookFunc functions can be hooked into [On] values. They get passed the On
+// object src for which the Set method was called, the old value odlval and the
+// to be set value newval and the check flag. See also the description of On.
 type HookFunc[T comparable] func(src *On[T], oldval, newval T, check bool) Flags
 
 // FlagHook's Flag method always returns the same Flags value.
@@ -59,6 +59,10 @@ func (cv *On[T]) Set(v T, chg Flags) Flags {
 	if cv.h == nil {
 		return cv.v.Set(v, chg)
 	}
+	return cv.slowSet(v, chg)
+}
+
+func (cv *On[T]) slowSet(v T, chg Flags) Flags {
 	if c := cv.h(cv, cv.v.Get(), v, true); c == 0 {
 		return 0
 	} else if chg == 0 {

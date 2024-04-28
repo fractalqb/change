@@ -28,6 +28,8 @@ package change
 // without memory overhead – unlike most observable libraries.
 type Val[T comparable] struct{ v T }
 
+var _ Changeable[int] = (*Val[int])(nil)
+
 func NewVal[T comparable](init T) Val[T] { return Val[T]{v: init} }
 
 // Get returns the current value.
