@@ -24,7 +24,7 @@ import (
 	"github.com/fractalqb/change"
 )
 
-func Nullable[T comparable](v change.Changeable[T], null T) any {
+func Nullable[T comparable](v change.Able[T], null T) any {
 	db := v.Get()
 	if db == null {
 		return nil
@@ -45,7 +45,7 @@ func promoteSqlTo[T any](from any) (p T, err error) {
 	return p, nil
 }
 
-func NullableF32(v change.Changeable[float32]) any {
+func NullableF32(v change.Able[float32]) any {
 	f := v.Get()
 	if math.IsNaN(float64(f)) {
 		return nil
@@ -53,7 +53,7 @@ func NullableF32(v change.Changeable[float32]) any {
 	return f
 }
 
-func NullableF64(v change.Changeable[float64]) any {
+func NullableF64(v change.Able[float64]) any {
 	f := v.Get()
 	if math.IsNaN(f) {
 		return nil

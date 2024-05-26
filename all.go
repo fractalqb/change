@@ -16,33 +16,20 @@
 
 package change
 
-import "fmt"
+// All implements [Able] with minimal overhead without checking for changes.
+type All[T comparable] struct{ v T }
 
-func ExampleOn() {
-	user := struct {
-		Name   On[string]
-		Logins On[int]
-	}{
-		Name: NewOn("John Doe", FlagHook[string](1).Func),
-		Logins: NewOn(0, func(_ *On[int], o, n int, check bool) Flags {
-			if !check {
-				fmt.Printf("changed logins from %d to %d\n", o, n)
-			}
-			return 2
-		}),
-	}
+var _ Able[int] = (*All[int])(nil)
 
-	chg := user.Name.Set("John Doe", 0)
-	chg |= user.Logins.Set(1, 0)
+func NewAll[T comparable](init T) All[T] { return All[T]{v: init} }
 
-	fmt.Printf("Changes: 0b%b\n", chg)
-	if chg&1 == 0 {
-		fmt.Println("Name did not change")
-	} else {
-		fmt.Println("Name changed")
-	}
-	// Output:
-	// changed logins from 0 to 1
-	// Changes: 0b10
-	// Name did not change
+// Get returns the current value.
+func (cv All[T]) Get() T {
+	return cv.v
+}
+
+// Set cv's value to v and always return chg.
+func (cv *All[T]) Set(v T, chg Flags) Flags {
+	cv.v = v
+	return chg
 }

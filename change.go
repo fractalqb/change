@@ -60,8 +60,11 @@ func (c Flags) Map(bits ...Flags) (res Flags) {
 	return res
 }
 
-type Changeable[T comparable] interface {
+type Able[T comparable] interface {
+	// Get returs the current value.
 	Get() T
+
+	// Set sets the value to v. It returns chg only if v is not equal to the
+	// current value. Otherwise Set should return 0.
 	Set(v T, chg Flags) Flags
-	//Bypass() *T
 }

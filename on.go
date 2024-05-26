@@ -16,7 +16,7 @@
 
 package change
 
-// On implements [Changeable] with a hook that is called on value changes.  When
+// On implements [Able] with a hook that is called on value changes.  When
 // [On.Set] is called, first the hook is called before a change is made with
 // check=true. With check==true the hook decides if it blocks the set operation.
 // To block the set operation, the hook returns 0. Otherwise the hook provides
@@ -28,7 +28,7 @@ type On[T comparable] struct {
 	h HookFunc[T]
 }
 
-var _ Changeable[int] = (*On[int])(nil)
+var _ Able[int] = (*On[int])(nil)
 
 // HookFunc functions can be hooked into [On] values. They get passed the On
 // object src for which the Set method was called, the old value odlval and the

@@ -16,19 +16,17 @@
 
 package change
 
-// Val is a Changeable that tracks changes with a simple set of Flags.
-// The flag(s) passed to a Set method call are returned if the
-// underlying value changed. Otherwise the passed value is not
-// assigned and 0 is returned. Note that if one passes flag=0 to Set
-// the returned value will always be 0, which makes it rather
-// uninteresting. However this will not affect the actual value
-// change.
+// Val is an [Able] that tracks changes with a simple set of Flags. The flag(s)
+// passed to a Set method call are returned if the underlying value changed.
+// Otherwise the passed value is not assigned and 0 is returned. Note that if
+// one passes flag=0 to Set the returned value will always be 0, which makes it
+// rather uninteresting. However this will not affect the actual value change.
 //
-// While these changeable values are rather bare bones they come
-// without memory overhead – unlike most observable libraries.
+// While these changeable values are rather bare bones they come without memory
+// overhead – unlike most observable libraries.
 type Val[T comparable] struct{ v T }
 
-var _ Changeable[int] = (*Val[int])(nil)
+var _ Able[int] = (*Val[int])(nil)
 
 func NewVal[T comparable](init T) Val[T] { return Val[T]{v: init} }
 

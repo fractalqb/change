@@ -233,8 +233,8 @@ type Obs[T comparable] struct {
 }
 
 var (
-	_ Observable      = (*Obs[int])(nil)
-	_ Changeable[int] = (*Obs[int])(nil)
+	_ Observable = (*Obs[int])(nil)
+	_ Able[int]  = (*Obs[int])(nil)
 )
 
 func NewObs[T comparable](init T, defaultTag any, defaultChg Flags, os ...Observer) Obs[T] {
