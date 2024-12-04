@@ -17,69 +17,51 @@
 package chgsql
 
 import (
-	"fmt"
-	"math"
+	"errors"
 
 	"github.com/fractalqb/change"
 )
 
-type OnScanner[T comparable] struct {
-	V    *change.On[T]
-	Chg  change.Flags
-	Null T
+func Scan[T comparable](v change.Able[T], chg change.Flags) *nonNullScanner[T] {
+	return &nonNullScanner[T]{v, chg}
 }
 
-func (v *OnScanner[T]) Scan(src any) error {
+type nonNullScanner[T comparable] struct {
+	V   change.Able[T]
+	Chg change.Flags
+}
+
+func (scn *nonNullScanner[T]) Scan(src any) error {
 	if src == nil {
-		v.Chg = v.V.Set(v.Null, v.Chg)
+		return errors.New("scanning illegal null value")
+	}
+	pv, err := promoteSqlTo[T](src)
+	if err != nil {
+		return err
+	}
+	scn.Chg = scn.V.Set(pv, scn.Chg)
+	return nil
+}
+
+func ScanNull[T comparable](v change.Able[T], null T, chg change.Flags) *nullScanner[T] {
+	return &nullScanner[T]{v, null, chg}
+}
+
+type nullScanner[T comparable] struct {
+	V    change.Able[T]
+	Null T
+	Chg  change.Flags
+}
+
+func (scn *nullScanner[T]) Scan(src any) error {
+	if src == nil {
+		scn.Chg = scn.V.Set(scn.Null, scn.Chg)
 		return nil
 	}
 	pv, err := promoteSqlTo[T](src)
 	if err != nil {
 		return err
 	}
-	v.Chg = v.V.Set(pv, v.Chg)
-	return nil
-}
-
-type OnScanF32 struct {
-	V   *change.On[float32]
-	Chg change.Flags
-}
-
-func (v *OnScanF32) Scan(src any) error {
-	if src == nil {
-		v.Chg = v.V.Set(nan32, v.Chg)
-		return nil
-	}
-	switch src := src.(type) {
-	case float64:
-		v.Chg = v.V.Set(float32(src), v.Chg)
-	case float32:
-		v.Chg = v.V.Set(src, v.Chg)
-	default:
-		return fmt.Errorf("cannot promote SQL %T to float32", src)
-	}
-	return nil
-}
-
-type OnScanF64 struct {
-	V   *change.On[float64]
-	Chg change.Flags
-}
-
-func (v *OnScanF64) Scan(src any) error {
-	if src == nil {
-		v.Chg = v.V.Set(math.NaN(), v.Chg)
-		return nil
-	}
-	switch src := src.(type) {
-	case float64:
-		v.Chg = v.V.Set(src, v.Chg)
-	case float32:
-		v.Chg = v.V.Set(float64(src), v.Chg)
-	default:
-		return fmt.Errorf("cannot promote SQL %T to float64", src)
-	}
+	scn.Chg = scn.V.Set(pv, scn.Chg)
 	return nil
 }
